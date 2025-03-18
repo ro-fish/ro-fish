@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { MapContainer, Polygon, TileLayer, Tooltip } from "react-leaflet";
+import { MapContainer, Polygon, Tooltip } from "react-leaflet";
 import FishingSpot from "@/types/fishing-spot";
+import MapTile from "../map-tile";
 
 const Map = ({
   fishingSpots,
@@ -19,10 +20,7 @@ const Map = ({
       zoom={15}
       style={{ height: "100%", width: "100%" }}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <MapTile />
 
       {fishingSpots.map((spot, index) => {
         return (

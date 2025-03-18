@@ -1,7 +1,7 @@
 "use client";
 
-import React, { memo } from "react";
 import "leaflet/dist/leaflet.css";
+import React, { memo } from "react";
 import dynamic from "next/dynamic";
 
 const MapProvider = memo(
