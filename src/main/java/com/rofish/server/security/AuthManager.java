@@ -1,5 +1,6 @@
 package com.rofish.server.security;
 
+import com.rofish.server.database.Database;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,11 +17,12 @@ import java.util.Map;
 @Component
 public class AuthManager implements AuthenticationManager {
 
-    private static final Map<String, String> users = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, String> users = Database.getDb().getUsers().entrySet().stream()
+            .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue().getPassword()), HashMap::putAll);
 
-    static {
-        users.put("root", "root");
-    }
+//    static {
+//        users.put("root", "root");
+//    }
 
     public boolean registerUser(String user, String password) {
         if (users.containsKey(user)) {

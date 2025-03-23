@@ -2,6 +2,7 @@ package com.rofish.server.controllers;
 
 import com.rofish.server.security.AuthManager;
 import com.rofish.server.security.JwtTokenProvider;
+import org.apache.el.parser.Token;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,11 +12,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 class AuthRequest {
-    private String username;
+    private String email;
     private String password;
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
@@ -23,6 +24,19 @@ class AuthRequest {
     }
 }
 
+class AuthResponse {
+    private String token;
+
+    public AuthResponse(String token) {
+        this.token = token;
+    }
+
+    public String toJson() {
+        return "{\"token\":\"" + token + "\"}";
+    }
+}
+
+@CrossOrigin(origins = "*") // Allow React frontend
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -37,7 +51,7 @@ public class AuthController {
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<String> register(@RequestBody AuthRequest request) {
-        if (authenticationManager.registerUser(request.getUsername(), request.getPassword())) {
+        if (authenticationManager.registerUser(request.getEmail(), request.getPassword())) {
             return ResponseEntity.ok().body("Registered successfully");
         }
 
@@ -47,11 +61,11 @@ public class AuthController {
     @PostMapping(value = "/login", consumes = "application/json")
     public ResponseEntity<String> login(@RequestBody AuthRequest request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = jwtTokenProvider.generateToken(authentication);
-            return ResponseEntity.ok().body(token);
+            AuthResponse token = new AuthResponse(jwtTokenProvider.generateToken(authentication));
+            return ResponseEntity.ok().body(token.toJson());
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.badRequest().body("User not found");
         } catch (BadCredentialsException e) {
