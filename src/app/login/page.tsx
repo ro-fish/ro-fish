@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import bcrypt from 'bcryptjs';
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,12 +15,13 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/login', {
-        email,
-        password
+      // const hashedPassword = await bcrypt.hash(password, 10);
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
+        email: email,
+        password: password
       });
-      
-      if (response.data.success) {
+      localStorage.setItem("authToken", response.data.token);
+      if (response.data.token) {
         router.push('/dashboard'); // Create this page later
       }
     } catch (err: any) {

@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "98be3fb7-7d4b-4b8e-9c00-274e69440c22",
+    "name": "Student",
+    "email": "Student@gmail.com",
+    "password": "$2b$10$EFNGJ6KCsPqSFMVkATP3zOrcBmobKV3lGTyHoO/yBN6hJgrhDAvwu"
+  },
+  {
+    "id": "bfdcbf14-d991-4152-9da4-bbf3a35d1f2c",
+    "name": "Mihai",
+    "email": "mihai@gmail.com",
+    "password": "$2b$10$j1iZJQiPELoVUHHOknsUSuxeCqzKi4400KOKP92BzLiNCHSUQIwHi"
+  },
+  {
+    "id": "9798fc60-f59f-4b4d-971e-196859a355e6",
+    "name": "razvan",
+    "email": "razvan@gmail.com",
+    "password": "$2b$10$cyTb1jiF.FsufieRUU1CNOmZtKE4nTb9GYL2qJCSB1wMZUOinxAWW"
+  }
+]
