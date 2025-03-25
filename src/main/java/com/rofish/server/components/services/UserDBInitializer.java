@@ -4,6 +4,7 @@ import com.rofish.server.models.User;
 import com.rofish.server.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,7 +27,10 @@ public class UserDBInitializer {
     @Transactional
     public void initRootAccount() {
         if (!userRepository.existsByEmail(ROOT_EMAIL)) {
-            User root = new User(ROOT_EMAIL, ROOT_FULL_NAME, ROOT_PASSWORD, true);
+            final String salt = BCrypt.gensalt();
+            final String hashedPassword = BCrypt.hashpw(ROOT_PASSWORD, salt);
+
+            final User root = new User(ROOT_EMAIL, ROOT_FULL_NAME, hashedPassword, salt, true);
             userRepository.save(root);
         }
     }

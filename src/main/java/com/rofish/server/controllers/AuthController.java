@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<String> register(@RequestBody AuthDTO request) {
-        if (authenticationManager.registerUser(request.email(), request.password())) {
+        if (authenticationManager.registerUser(request.email(), request.fullName(), request.password())) {
             return ResponseEntity.ok().body("Registered successfully");
         }
 

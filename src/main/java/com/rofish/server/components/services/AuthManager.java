@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,12 +22,15 @@ public class AuthManager implements AuthenticationManager {
         this.userRepository = userRepository;
     }
 
-    public boolean registerUser(String username, String password) {
-        if (userRepository.existsByEmail(username)) {
+    public boolean registerUser(String email, String fullName, String password) {
+        if (userRepository.existsByEmail(email)) {
             return false;
         }
 
-        final User user = new User(username,  "FIXME: full name", password, false);
+        final String salt = BCrypt.gensalt();
+        final String hashedPassword = BCrypt.hashpw(password, salt);
+
+        final User user = new User(email, fullName, hashedPassword, salt, false);
         userRepository.save(user);
         return true;
     }
@@ -40,12 +44,13 @@ public class AuthManager implements AuthenticationManager {
             throw new UsernameNotFoundException("User " + authentication.getName() + " not found");
         }
 
-        User user = userRepository.getUserByEmail(authentication.getName());
+        final User user = userRepository.getUserByEmail(authentication.getName());
+        final String hashedPassword = BCrypt.hashpw(password, user.getPasswordSalt());
 
-        if (!user.getPassword().equals(password)) {
+        if (!user.getPassword().equals(hashedPassword)) {
             throw new BadCredentialsException("Invalid password for user " + name);
         }
 
-        return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>() /* TODO: authorities */);
+        return new UsernamePasswordAuthenticationToken(name, hashedPassword, new ArrayList<>() /* TODO: authorities */);
     }
 }
