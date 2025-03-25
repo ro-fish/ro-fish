@@ -1,8 +1,8 @@
 package com.rofish.server.controllers;
 
+import com.rofish.server.dtos.AuthDTO;
 import com.rofish.server.security.AuthManager;
 import com.rofish.server.security.JwtTokenProvider;
-import org.apache.el.parser.Token;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,21 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-class AuthRequest {
-    private String email;
-    private String password;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-}
-
 class AuthResponse {
-    private String token;
+    private final String token;
 
     public AuthResponse(String token) {
         this.token = token;
@@ -50,8 +37,8 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<String> register(@RequestBody AuthRequest request) {
-        if (authenticationManager.registerUser(request.getEmail(), request.getPassword())) {
+    public ResponseEntity<String> register(@RequestBody AuthDTO request) {
+        if (authenticationManager.registerUser(request.email(), request.password())) {
             return ResponseEntity.ok().body("Registered successfully");
         }
 
@@ -59,9 +46,9 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login", consumes = "application/json")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<String> login(@RequestBody AuthDTO request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             AuthResponse token = new AuthResponse(jwtTokenProvider.generateToken(authentication));

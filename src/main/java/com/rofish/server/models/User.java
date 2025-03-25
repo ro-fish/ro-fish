@@ -1,0 +1,36 @@
+package com.rofish.server.models;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @NotNull
+    private String email;
+    @NotNull
+    private String fullName;
+    @NotNull
+    private String password;
+    private boolean isAdmin;
+
+    public User(String email, String fullName, String password, boolean isAdmin) {
+        this.email = email;
+        this.fullName = fullName;
+        this.password = password;
+        this.isAdmin = isAdmin;
+    }
+
+    public User() {
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}

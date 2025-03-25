@@ -1,6 +1,7 @@
 package com.rofish.server.security;
 
-import com.rofish.server.database.Database;
+import com.rofish.server.models.User;
+import com.rofish.server.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,39 +11,42 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class AuthManager implements AuthenticationManager {
 
-    private static final Map<String, String> users = Database.getDb().getUsers().entrySet().stream()
-            .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue().getPassword()), HashMap::putAll);
+    private final UserRepository userRepository;
 
-//    static {
-//        users.put("root", "root");
-//    }
+    public AuthManager(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    public boolean registerUser(String user, String password) {
-        if (users.containsKey(user)) {
+
+    public boolean registerUser(String username, String password) {
+        if (userRepository.existsByEmail(username)) {
             return false;
         }
 
-        users.put(user, password);
+        final User user = new User(username,  "FIXME: full name", password, false);
+        userRepository.save(user);
         return true;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        if (!users.containsKey(authentication.getName())) {
+        final String name = authentication.getName();
+        final String password = (String) authentication.getCredentials();
+
+        if (!userRepository.existsByEmail(name)) {
             throw new UsernameNotFoundException("User " + authentication.getName() + " not found");
         }
 
-        if (!authentication.getCredentials().equals(users.get(authentication.getName()))) {
-            throw new BadCredentialsException("Invalid password for user " + authentication.getName());
+        User user = userRepository.getUserByEmail(authentication.getName());
+
+        if (!user.getPassword().equals(password)) {
+            throw new BadCredentialsException("Invalid password for user " + name);
         }
 
-        return new UsernamePasswordAuthenticationToken(authentication.getName(), authentication.getCredentials(), new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>() /* TODO: authorities */);
     }
 }
