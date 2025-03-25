@@ -1,30 +1,34 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import axios from 'axios';
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import axios from "axios";
 
 export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [fullName, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/signup', {
-        name,
-        email,
-        password
-      });
-      
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        {
+          email,
+          fullName,
+          password,
+        }
+      );
+
       if (response.data.success) {
-        router.push('/login');
+        router.push("/login");
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Eroare la înregistrare');
+      setError(err.response?.data?.error || "Eroare la înregistrare");
     }
   };
 
@@ -56,7 +60,7 @@ export default function SignupPage() {
               </label>
               <input
                 type="text"
-                value={name}
+                value={fullName}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
                 required
@@ -96,7 +100,7 @@ export default function SignupPage() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-400">
-              Ai deja cont?{' '}
+              Ai deja cont?{" "}
               <Link
                 href="/login"
                 className="text-blue-400 hover:text-blue-300 font-medium"

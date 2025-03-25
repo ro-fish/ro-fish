@@ -1,31 +1,29 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import axios from 'axios';
-import bcrypt from 'bcryptjs';
+"use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import axios from "axios";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const hashedPassword = await bcrypt.hash(password, 10);
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
-        email: email,
-        password: password
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        { email, password }
+      );
       localStorage.setItem("authToken", response.data.token);
       if (response.data.token) {
-        router.push('/dashboard'); // Create this page later
+        router.push("/dashboard");
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Eroare la autentificare');
+      setError(err.response?.data?.error || "Eroare la autentificare");
     }
   };
 
@@ -47,9 +45,11 @@ export default function LoginPage() {
                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <h2 className="mt-4 text-2xl font-bold text-white">Autentificare</h2>
+            <h2 className="mt-4 text-2xl font-bold text-white">
+              Autentificare
+            </h2>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -85,7 +85,7 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-400">
-              Nu ai cont?{' '}
+              Nu ai cont?{" "}
               <Link
                 href="/signup"
                 className="text-blue-400 hover:text-blue-300 font-medium"
