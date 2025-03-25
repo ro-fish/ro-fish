@@ -1,4 +1,4 @@
-package com.rofish.server.security;
+package com.rofish.server.components.services;
 
 import com.rofish.server.models.User;
 import com.rofish.server.repositories.UserRepository;
@@ -20,7 +20,6 @@ public class AuthManager implements AuthenticationManager {
     public AuthManager(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     public boolean registerUser(String username, String password) {
         if (userRepository.existsByEmail(username)) {

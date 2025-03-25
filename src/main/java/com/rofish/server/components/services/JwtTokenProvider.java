@@ -1,22 +1,22 @@
-package com.rofish.server.security;
+package com.rofish.server.components.services;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
-@Component
+/**
+ * Provider for JWT tokens and operations on them.
+ */
+@Service
 public class JwtTokenProvider {
 
     private final Key jwtSecret = Jwts.SIG.HS256.key().build();
-    private final long jwtLifetime = 3600000;
+    private static final long jwtLifetime = 3600000;
 
     private Key getKey() {
         return jwtSecret;

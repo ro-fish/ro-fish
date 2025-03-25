@@ -1,4 +1,4 @@
-package com.rofish.server.security;
+package com.rofish.server.components.services;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

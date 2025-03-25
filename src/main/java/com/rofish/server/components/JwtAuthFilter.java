@@ -1,5 +1,6 @@
-package com.rofish.server.security;
+package com.rofish.server.components;
 
+import com.rofish.server.components.services.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

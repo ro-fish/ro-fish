@@ -1,4 +1,4 @@
-package com.rofish.server.services;
+package com.rofish.server.components.services;
 
 import com.rofish.server.models.User;
 import com.rofish.server.repositories.UserRepository;
@@ -7,10 +7,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for initializing the database with the root account.
+ * Initialize the database with the root account.
  */
 @Service
-public class UserDBInitializerService {
+public class UserDBInitializer {
 
     private static final String ROOT_EMAIL = "root@rofish.admin.ro";
     private static final String ROOT_FULL_NAME = "Cont Administrativ";
@@ -18,7 +18,7 @@ public class UserDBInitializerService {
 
     private final UserRepository userRepository;
 
-    public UserDBInitializerService(UserRepository userRepository) {
+    public UserDBInitializer(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

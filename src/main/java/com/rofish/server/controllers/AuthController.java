@@ -1,8 +1,8 @@
 package com.rofish.server.controllers;
 
 import com.rofish.server.dtos.AuthDTO;
-import com.rofish.server.security.AuthManager;
-import com.rofish.server.security.JwtTokenProvider;
+import com.rofish.server.components.services.AuthManager;
+import com.rofish.server.components.services.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

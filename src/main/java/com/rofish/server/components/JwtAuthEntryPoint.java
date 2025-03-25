@@ -1,4 +1,4 @@
-package com.rofish.server.security;
+package com.rofish.server.components;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

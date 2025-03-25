@@ -2,12 +2,12 @@
 
 ## Structură
 
+- `components` - funcționalități și servicii generale ale serverului
+- `configurations` - configurări extra ale serverului
 - `controllers` - răspunsuri la cereri HTTP
 - `dtos` - obiecte folosite pentru cereri
 - `models` - reprezentări pentru stocare în bază de date
 - `repositories` - interacțiuni cu baza de date
-- `services` - servicii auxiliare
-- `security` - TODO: remove
 
 ## Inițializare bază de date
 

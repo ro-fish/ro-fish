@@ -1,5 +1,7 @@
-package com.rofish.server.security;
+package com.rofish.server.configurations;
 
+import com.rofish.server.components.JwtAuthEntryPoint;
+import com.rofish.server.components.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
