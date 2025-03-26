@@ -1,24 +1,36 @@
 package com.rofish.server.controllers;
 
 import com.rofish.server.dtos.FishingSpotDTO;
+import com.rofish.server.models.FishingSpot;
+import com.rofish.server.repositories.FishingSpotRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*") // Allow React frontend
 @RestController
-@RequestMapping("/api/fishing-spots")
+@RequestMapping("/api/fishing-spot")
 public class FishingSpotsController {
 
-    @GetMapping("")
-    public ResponseEntity<List<FishingSpotDTO>> getFishingSpots() {
-        List<FishingSpotDTO> example = List.of(
-                new FishingSpotDTO("Lake", 10, 5),
-                new FishingSpotDTO("River", 20, 3),
-                new FishingSpotDTO("Ocean", 30, 2));
+    private final FishingSpotRepository repository;
 
-        return ResponseEntity.ok().body(example);
+    public FishingSpotsController(FishingSpotRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<FishingSpotDTO>> getAllFishingSpots() {
+        List<FishingSpotDTO> spots = new ArrayList<>();
+        repository.findAll().forEach(spot -> spots.add(new FishingSpotDTO(spot)));
+        return ResponseEntity.ok().body(spots);
+    }
+
+    @PostMapping(value = "/add", consumes = "application/json")
+    public ResponseEntity<String> addFishingSpot(@Valid @RequestBody FishingSpotDTO spot) {
+        repository.save(new FishingSpot(spot.name(), spot.perimeter()));
+        return ResponseEntity.ok().body("Fishing spot added successfully");
     }
 }

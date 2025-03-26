@@ -26,7 +26,8 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((authorize) -> {
             authorize.requestMatchers("/api/auth/**").permitAll();
-            authorize.anyRequest().authenticated();
+//            authorize.anyRequest().authenticated(); TODO: Enable authentication for all requests
+            authorize.anyRequest().permitAll();
         });
 
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint));

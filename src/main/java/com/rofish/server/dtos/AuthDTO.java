@@ -1,4 +1,6 @@
 package com.rofish.server.dtos;
 
-public record AuthDTO(String email, String fullName, String password) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record AuthDTO(@NotEmpty String email, @NotEmpty String fullName, @NotEmpty String password) {
 }
