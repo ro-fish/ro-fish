@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "*") // Allow React frontend
 @RestController
 @RequestMapping("/api/fishing-spot")
 public class FishingSpotsController {
