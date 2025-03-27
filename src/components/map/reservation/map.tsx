@@ -28,11 +28,7 @@ const Map = ({
             key={index}
             pathOptions={{
               color:
-                selection !== null && selection === index
-                  ? "green"
-                  : spot.taken
-                    ? "red"
-                    : "blue",
+                selection !== null && selection === index ? "green" : "blue",
             }}
             positions={spot.bounds}
             eventHandlers={{

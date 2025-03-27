@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import MapProvider from "@/components/map/reservation/map-provider";
+import FishingSpot, { FishingSpotDTO } from "@/types/fishing-spot";
+import axios from "axios";
+import { LatLng } from "leaflet";
 
 export default function Reservation() {
   const [selection, setSelection] = React.useState<number | null>(null);
@@ -9,8 +12,25 @@ export default function Reservation() {
     new Date(Date.now() + 86400000) /*FIXME*/
   );
   const [personCount, setPersonCount] = React.useState(1);
+  const [fishingSpots, setFishingSpots] = React.useState<FishingSpot[]>([]);
 
   const sel = useCallback((s: number) => setSelection(s), []);
+
+  const fetchSpots = () => {
+    axios.get<FishingSpotDTO[]>("/api/fishing-spot/all").then((response) => {
+      const recvSpots = response.data.map(({ name, perimeter }) => ({
+        name,
+        bounds: perimeter.map(
+          ({ latitude, longitude }) => new LatLng(latitude, longitude)
+        ),
+      }));
+
+      setFishingSpots(recvSpots);
+    });
+  };
+
+  // Fetch spots on page load and on date change
+  useEffect(() => fetchSpots(), [date]);
 
   const submitReservation = () => {
     if (personCount === 0 || selection === null) {
@@ -67,7 +87,7 @@ export default function Reservation() {
             <label className="block text-sm font-medium text-gray-300">
               Locație
             </label>
-            <MapProvider date={date} onSelect={sel} />
+            <MapProvider fishingSpots={fishingSpots} onSelect={sel} />
           </div>
           <div>
             <input

@@ -1,9 +1,19 @@
-import { LatLngExpression } from "leaflet";
+import { LatLng } from "leaflet";
 
 type FishingSpot = {
-  bounds: LatLngExpression[];
+  bounds: LatLng[];
   name: string;
-  taken: boolean;
+};
+
+export type FishingSpotDTO = {
+    name: string;
+    id?: string;
+    perimeter: CoordinateDTO[];
+};
+
+export type CoordinateDTO = {
+    latitude: number;
+    longitude: number;
 };
 
 export default FishingSpot;

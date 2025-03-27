@@ -15,14 +15,11 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/register",
-        {
-          email,
-          fullName,
-          password,
-        }
-      );
+      const response = await axios.post("/api/auth/register", {
+        email,
+        fullName,
+        password,
+      });
 
       if (response.data.success) {
         router.push("/login");

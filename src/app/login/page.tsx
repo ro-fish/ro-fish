@@ -14,10 +14,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        { email, password }
-      );
+      const response = await axios.post("/api/auth/login", { email, password });
       localStorage.setItem("authToken", response.data.token);
       if (response.data.token) {
         router.push("/dashboard");

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   MapContainer,
   useMapEvents,
@@ -8,38 +9,11 @@ import {
   Polyline,
   Polygon,
 } from "react-leaflet";
+import { latLng, LatLng } from "leaflet";
 import MapTile from "../map-tile";
-import { LatLngExpression } from "leaflet";
-import FishingSpot from "@/types/fishing-spot";
+import FishingSpot, { FishingSpotDTO } from "@/types/fishing-spot";
 
-const dummySpots = [
-  {
-    bounds: [
-      { lat: 44.67113785, lng: 25.9927349 },
-      { lat: 44.67113785, lng: 25.9937449 },
-      { lat: 44.67213795, lng: 25.9937449 },
-      { lat: 44.67213795, lng: 25.9927349 },
-    ],
-    name: "Fishing spot 1",
-    taken: false,
-  },
-  {
-    bounds: [
-      { lat: 44.68113785, lng: 25.9927349 },
-      { lat: 44.68113785, lng: 25.9937449 },
-      { lat: 44.68213795, lng: 25.9937449 },
-      { lat: 44.68213795, lng: 25.9927349 },
-    ],
-    name: "Fishing spot 2",
-    taken: false,
-  },
-];
-
-const ClickHandler = ({
-  handler,
-}: {
-  handler: (point: LatLngExpression) => void;
-}) => {
+const ClickHandler = ({ handler }: { handler: (point: LatLng) => void }) => {
   useMapEvents({
     click(e) {
       handler(e.latlng);
@@ -52,10 +26,27 @@ const ClickHandler = ({
 const Map = () => {
   const markerOptions = { color: "blue" };
 
+  const [name, setName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [hideSpots, setHideSpots] = useState(false);
-  const [spots, setSpots] = useState<FishingSpot[]>(dummySpots);
-  const [trail, setTrail] = useState<LatLngExpression[]>([]);
+  const [spots, setSpots] = useState<FishingSpot[]>([]);
+  const [trail, setTrail] = useState<LatLng[]>([]);
+
+  const fetchSpots = () => {
+    axios.get<FishingSpotDTO[]>("/api/fishing-spot/all").then((response) => {
+      const recvSpots = response.data.map(({ name, perimeter }) => ({
+        name,
+        bounds: perimeter.map(({ latitude, longitude }) =>
+          latLng(latitude, longitude)
+        ),
+      }));
+
+      setSpots(recvSpots);
+    });
+  };
+
+  // Fetch spots on page load
+  useEffect(() => fetchSpots, []);
 
   return (
     <div>
@@ -72,8 +63,13 @@ const Map = () => {
           spots.map((spot, index) => (
             <Polygon
               key={index}
-              pathOptions={{ color: spot.taken ? "red" : "green" }}
+              pathOptions={{ color: "green" }}
               positions={spot.bounds}
+              eventHandlers={{
+                click: () => {
+                  setName(spot.name);
+                },
+              }}
             />
           ))}
 
@@ -116,7 +112,19 @@ const Map = () => {
         type="button"
         value="Salvează locația"
         onClick={() => {
-          const spot = { bounds: trail, name: "sal", taken: false };
+          const spot = { bounds: trail, name };
+          const serializedSpot: FishingSpotDTO = {
+            ...spot,
+            perimeter: trail.map(({ lat, lng }) => ({
+              latitude: lat,
+              longitude: lng,
+            })),
+          };
+
+          axios
+            .post("/api/fishing-spot/add", serializedSpot)
+            .then(() => alert("trimis"));
+
           setSpots([...spots, spot]);
           setTrail([]);
         }}
@@ -124,11 +132,17 @@ const Map = () => {
 
       <div>
         <label>Nume locație</label>
-        <input type="text" disabled={!editMode} />
+        <input
+          type="text"
+          disabled={!editMode}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </div>
       <div>
         <button
           onClick={() => {
+            if (!editMode) setName("");
             setEditMode(!editMode);
             setTrail([]);
           }}
