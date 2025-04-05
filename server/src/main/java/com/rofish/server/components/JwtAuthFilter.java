@@ -1,5 +1,6 @@
 package com.rofish.server.components;
 
+import com.rofish.server.components.services.AuthManager;
 import com.rofish.server.components.services.JwtTokenProvider;
 import com.rofish.server.models.User;
 import com.rofish.server.repositories.UserRepository;
@@ -21,15 +22,6 @@ import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-
-    private static final String USER_AUTHORITY = "USER";
-    private static final String ADMIN_AUTHORITY = "ADMIN";
-
-    private static final List<GrantedAuthority> USER_AUTHORITIES = List.of(new SimpleGrantedAuthority(USER_AUTHORITY));
-    private static final List<GrantedAuthority> ADMIN_AUTHORITIES = List.of(
-            new SimpleGrantedAuthority(USER_AUTHORITY),
-            new SimpleGrantedAuthority(ADMIN_AUTHORITY)
-    );
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -73,7 +65,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String username = jwtTokenProvider.getUsernameFromToken(token);
 
             User user = userRepository.getUserByEmail(username);
-            List<GrantedAuthority> grantedAuthorities = user.isAdmin() ? ADMIN_AUTHORITIES : USER_AUTHORITIES;
+            List<GrantedAuthority> grantedAuthorities = AuthManager.getUserAuthorities(user);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
