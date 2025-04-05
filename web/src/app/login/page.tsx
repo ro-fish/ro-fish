@@ -8,20 +8,17 @@ import axios from "axios";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("/api/auth/login", { email, password });
-      localStorage.setItem("authToken", response.data.token);
+      axios.post("/api/auth/login", { email, password }).then((response) => {
       if (response.data.token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        localStorage.setItem("authToken", response.data.token); // FIXME: save the token somewhere safe
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Eroare la autentificare");
-    }
+    }, (reason) => {alert(reason);});
   };
 
   return (
