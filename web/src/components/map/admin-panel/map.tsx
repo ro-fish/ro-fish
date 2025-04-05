@@ -42,7 +42,7 @@ const Map = () => {
       }));
 
       setSpots(recvSpots);
-    });
+    }, (reason) => alert(reason));
   };
 
   // Fetch spots on page load
@@ -122,7 +122,7 @@ const Map = () => {
           };
 
           axios
-            .post("/api/fishing-spot/add", serializedSpot)
+            .post("/api/fishing-spot/create", serializedSpot)
             .then(() => alert("trimis"));
 
           setSpots([...spots, spot]);
