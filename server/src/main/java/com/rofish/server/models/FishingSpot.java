@@ -1,6 +1,8 @@
 package com.rofish.server.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -9,11 +11,12 @@ public class FishingSpot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private String name;
 
     @ElementCollection
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Coordinates> perimeter;
 
     public FishingSpot(String name, List<Coordinates> perimeter) {
@@ -23,6 +26,10 @@ public class FishingSpot {
 
     public FishingSpot() {
         this("", List.of());
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {

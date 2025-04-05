@@ -1,6 +1,6 @@
 package com.rofish.server.controllers;
 
-import com.rofish.server.dtos.AuthDTO;
+import com.rofish.server.views.AuthView;
 import com.rofish.server.components.services.AuthManager;
 import com.rofish.server.components.services.JwtTokenProvider;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<String> register(@Valid @RequestBody AuthDTO request) {
+    public ResponseEntity<String> register(@Valid @RequestBody AuthView request) {
         if (authenticationManager.registerUser(request.email(), request.fullName(), request.password())) {
             return ResponseEntity.ok().body("Registered successfully");
         }
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login", consumes = "application/json")
-    public ResponseEntity<? /* FIXME */> login(@RequestBody AuthDTO request) {
+    public ResponseEntity<? /* FIXME */> login(@RequestBody AuthView request) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
             SecurityContextHolder.getContext().setAuthentication(authentication);

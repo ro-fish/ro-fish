@@ -5,9 +5,9 @@
 - `components` - funcționalități și servicii generale ale serverului
 - `configurations` - configurări extra ale serverului
 - `controllers` - răspunsuri la cereri HTTP
-- `dtos` - obiecte folosite pentru cereri
 - `models` - reprezentări pentru stocare în bază de date
 - `repositories` - interacțiuni cu baza de date
+- `views` - obiecte folosite pentru cereri
 
 ## Inițializare bază de date
 

@@ -1,6 +1,6 @@
 package com.rofish.server.controllers;
 
-import com.rofish.server.dtos.FishingSpotDTO;
+import com.rofish.server.views.FishingSpotView;
 import com.rofish.server.models.FishingSpot;
 import com.rofish.server.repositories.FishingSpotRepository;
 import jakarta.validation.Valid;
@@ -21,14 +21,14 @@ public class FishingSpotsController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<FishingSpotDTO>> getAllFishingSpots() {
-        List<FishingSpotDTO> spots = new ArrayList<>();
-        repository.findAll().forEach(spot -> spots.add(new FishingSpotDTO(spot)));
+    public ResponseEntity<List<FishingSpotView>> getAllFishingSpots() {
+        List<FishingSpotView> spots = new ArrayList<>();
+        repository.findAll().forEach(spot -> spots.add(new FishingSpotView(spot)));
         return ResponseEntity.ok().body(spots);
     }
 
     @PostMapping(value = "/add", consumes = "application/json")
-    public ResponseEntity<String> addFishingSpot(@Valid @RequestBody FishingSpotDTO spot) {
+    public ResponseEntity<String> addFishingSpot(@Valid @RequestBody FishingSpotView spot) {
         repository.save(new FishingSpot(spot.name(), spot.perimeter()));
         return ResponseEntity.ok().body("Fishing spot added successfully");
     }
