@@ -43,4 +43,8 @@ public class User {
     public String getPasswordSalt() {
         return passwordSalt;
     }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDBInitializer {
 
-    private static final String ROOT_EMAIL = "root@rofish.admin.ro";
+    private static final String ROOT_EMAIL = "root@admin.rofish.ro";
     private static final String ROOT_FULL_NAME = "Cont Administrativ";
     private static final String ROOT_PASSWORD = "root";
 

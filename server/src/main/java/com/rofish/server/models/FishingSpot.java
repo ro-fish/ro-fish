@@ -22,7 +22,6 @@ public class FishingSpot {
     }
 
     public FishingSpot() {
-        this("", List.of());
     }
 
     public String getName() {

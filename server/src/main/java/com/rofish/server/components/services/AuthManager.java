@@ -7,19 +7,34 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class AuthManager implements AuthenticationManager {
+
+    public static final String USER_AUTHORITY = "USER";
+    public static final String ADMIN_AUTHORITY = "ADMIN";
+
+    public static final List<GrantedAuthority> USER_AUTHORITIES = List.of(new SimpleGrantedAuthority(USER_AUTHORITY));
+    public static final List<GrantedAuthority> ADMIN_AUTHORITIES = List.of(
+            new SimpleGrantedAuthority(USER_AUTHORITY),
+            new SimpleGrantedAuthority(ADMIN_AUTHORITY)
+    );
 
     private final UserRepository userRepository;
 
     public AuthManager(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public static List<GrantedAuthority> getUserAuthorities(User user) {
+        return user.isAdmin() ? ADMIN_AUTHORITIES : USER_AUTHORITIES;
     }
 
     public boolean registerUser(String email, String fullName, String password) {
@@ -51,6 +66,6 @@ public class AuthManager implements AuthenticationManager {
             throw new BadCredentialsException("Invalid password for user " + name);
         }
 
-        return new UsernamePasswordAuthenticationToken(name, hashedPassword, new ArrayList<>() /* TODO: authorities */);
+        return new UsernamePasswordAuthenticationToken(name, hashedPassword, getUserAuthorities(user));
     }
 }

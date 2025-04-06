@@ -5,6 +5,7 @@ import com.rofish.server.models.FishingSpot;
 import com.rofish.server.repositories.FishingSpotRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class FishingSpotsController {
         return ResponseEntity.ok().body(spots);
     }
 
-    @PostMapping(value = "/add", consumes = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = "/create", consumes = "application/json")
     public ResponseEntity<String> addFishingSpot(@Valid @RequestBody FishingSpotDTO spot) {
         repository.save(new FishingSpot(spot.name(), spot.perimeter()));
         return ResponseEntity.ok().body("Fishing spot added successfully");
