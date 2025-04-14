@@ -6,18 +6,19 @@ import com.rofish.server.models.User;
 import com.rofish.server.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -31,11 +32,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userRepository = userRepository;
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+    private String getTokenFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        Cookie tokenCookie = Arrays.stream(cookies).filter(cookie -> "auth".equals(cookie.getName())).findFirst().orElse(null);
+        if (tokenCookie != null) {
+            return tokenCookie.getValue();
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieve the JWT token from the request. First fetch it from the cookies. If not found, check Authorization.
+     *
+     * @param request The processed request
+     * @return The token as a string, or null if not found
+     */
+    private String getTokenFromRequest(HttpServletRequest request) {
+        String token = getTokenFromCookies(request);
+        if (StringUtils.hasText(token)) {
+            return token;
+        }
+
+        token = request.getHeader("Authorization");
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring(7);
         }
 
         return null;
@@ -48,7 +73,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
      * authorities), to be used in handling the request.
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
 
         try {

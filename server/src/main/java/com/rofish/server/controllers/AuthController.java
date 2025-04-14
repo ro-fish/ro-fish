@@ -6,7 +6,10 @@ import com.rofish.server.components.services.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,13 +62,32 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            ResponseCookie cookie = ResponseCookie.from("auth", jwtTokenProvider.generateToken(authentication)).httpOnly(true).path("/").maxAge(3600).sameSite("Strict").build();
+
             TokenResponse response = new TokenResponse(jwtTokenProvider.generateToken(authentication));
-            return ResponseEntity.ok().body(response);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
         } catch (UsernameNotFoundException | BadCredentialsException e) {
             return ResponseEntity.status(401).build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping(value = "/me")
+    public ResponseEntity<String> getMe() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        String username = authentication.getName();
+        return ResponseEntity.ok(username);
+    }
+
+    @GetMapping(value = "/logout")
+    public ResponseEntity<String> logout() {
+        ResponseCookie cookie = ResponseCookie.from("auth", "").httpOnly(true).path("/").maxAge(0).sameSite("Strict").build();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Logged out successfully.");
     }
 
     public record TokenResponse(String token) {
