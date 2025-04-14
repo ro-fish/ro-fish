@@ -1,8 +1,6 @@
 services:
-  mysql-db:
+  database:
     image: mysql:8.0
-    networks:
-      - veth-db
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_USER: ${ROFISH_DB_USER}
@@ -13,10 +11,32 @@ services:
     ports:
       - "3306:3306"
 
-networks:
-  veth-db:
-    driver: bridge
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    environment:
+      ROFISH_DB_USER: ${ROFISH_DB_USER}
+      ROFISH_DB_PASSWORD: ${ROFISH_DB_PASSWORD}
+      ROFISH_DB_NAME: ${ROFISH_DB}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app
 
 volumes:
-    rofish-db:
-      driver: local
+  rofish-db:
+    driver: local
