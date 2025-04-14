@@ -4,21 +4,21 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity
+@Entity(name = "fishing_spots")
 public class FishingSpot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private String name;
 
     @ElementCollection
-    private List<Coordinates> perimeter;
+    private List<Coordinates> limits;
 
-    public FishingSpot(String name, List<Coordinates> perimeter) {
+    public FishingSpot(String name, List<Coordinates> limits) {
         this.name = name;
-        this.perimeter = perimeter;
+        this.limits = limits;
     }
 
     public FishingSpot() {
@@ -28,8 +28,8 @@ public class FishingSpot {
         return name;
     }
 
-    public List<Coordinates> getPerimeter() {
-        return perimeter;
+    public List<Coordinates> getLimits() {
+        return limits;
     }
 
     @Embeddable

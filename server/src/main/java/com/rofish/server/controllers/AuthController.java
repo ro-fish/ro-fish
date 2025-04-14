@@ -1,8 +1,10 @@
 package com.rofish.server.controllers;
 
-import com.rofish.server.dtos.AuthDTO;
+import com.rofish.server.views.AuthView;
 import com.rofish.server.components.services.AuthManager;
 import com.rofish.server.components.services.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,54 +26,48 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    @Operation(
+            summary = "Register a new user.",
+            description = "Registers a new user in the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User registered successfully."),
+                    @ApiResponse(responseCode = "400", description = "Invalid register data."),
+                    @ApiResponse(responseCode = "409", description = "User already exists.")
+            }
+    )
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<String> register(@Valid @RequestBody AuthDTO request) {
+    public ResponseEntity<String> register(@Valid @RequestBody AuthView request) {
         if (authenticationManager.registerUser(request.email(), request.fullName(), request.password())) {
-            return ResponseEntity.ok().body("Registered successfully");
+            return ResponseEntity.ok().body("Registered successfully.");
         }
 
-        return ResponseEntity.badRequest().body("User already exists");
+        return ResponseEntity.status(409).body("User already exists.");
     }
 
+    @Operation(
+            summary = "Login",
+            description = "Log in a user and return a JWT token for the session.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Login successful."),
+                    @ApiResponse(responseCode = "401", description = "Invalid password or user does not exist.")
+            }
+    )
     @PostMapping(value = "/login", consumes = "application/json")
-    public ResponseEntity<? /* FIXME */> login(@RequestBody AuthDTO request) {
+    public ResponseEntity<TokenResponse> login(@RequestBody AuthView request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            AuthResponse.AcceptedAuthResponse response = new AuthResponse.AcceptedAuthResponse("Login successful", jwtTokenProvider.generateToken(authentication));
+            TokenResponse response = new TokenResponse(jwtTokenProvider.generateToken(authentication));
             return ResponseEntity.ok().body(response);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body(new AuthResponse("User not found"));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.badRequest().body(new AuthResponse("Invalid password"));
+        } catch (UsernameNotFoundException | BadCredentialsException e) {
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new AuthResponse("Error occurred"));
+            return ResponseEntity.internalServerError().build();
         }
     }
 
-    public static class AuthResponse {
-        private final String message;
-
-        public AuthResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public static class AcceptedAuthResponse extends AuthResponse {
-            private final String token;
-
-            public AcceptedAuthResponse(String message, String token) {
-                super(message);
-                this.token = token;
-            }
-
-            public String getToken() {
-                return token;
-            }
-        }
+    public record TokenResponse(String token) {
     }
 }
