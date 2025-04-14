@@ -35,7 +35,7 @@ export default function Home() {
               Autentificare
             </Link>
             <Link
-              href="/signup"
+              href="/register"
               className="bg-gray-800 text-white px-8 py-4 rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors text-lg"
             >
               Înregistrare

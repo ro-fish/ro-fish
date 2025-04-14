@@ -12,6 +12,7 @@ import {
 import { latLng, LatLng } from "leaflet";
 import MapTile from "../map-tile";
 import FishingSpot, { FishingSpotDTO } from "@/types/fishing-spot";
+import { CREATE_FISHING_SPOT, FETCH_FISHING_SPOTS } from "@/lib/api";
 
 const ClickHandler = ({ handler }: { handler: (point: LatLng) => void }) => {
   useMapEvents({
@@ -33,7 +34,7 @@ const Map = () => {
   const [trail, setTrail] = useState<LatLng[]>([]);
 
   const fetchSpots = () => {
-    axios.get<FishingSpotDTO[]>("/api/fishing-spot/all").then((response) => {
+    axios.get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS).then((response) => {
       const recvSpots = response.data.map(({ name, perimeter }) => ({
         name,
         bounds: perimeter.map(({ latitude, longitude }) =>
@@ -122,7 +123,7 @@ const Map = () => {
           };
 
           axios
-            .post("/api/fishing-spot/create", serializedSpot)
+            .post(CREATE_FISHING_SPOT, serializedSpot)
             .then(() => alert("trimis"));
 
           setSpots([...spots, spot]);

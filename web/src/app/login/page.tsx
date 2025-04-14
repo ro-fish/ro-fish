@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
+import { LOGIN } from "@/lib/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-      axios.post("/api/auth/login", { email, password }).then((response) => {
+      axios.post(LOGIN, { email, password }).then((response) => {
       if (response.data.token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         localStorage.setItem("authToken", response.data.token); // FIXME: save the token somewhere safe
@@ -81,7 +82,7 @@ export default function LoginPage() {
             <p className="text-sm text-gray-400">
               Nu ai cont?{" "}
               <Link
-                href="/signup"
+                href="/register"
                 className="text-blue-400 hover:text-blue-300 font-medium"
               >
                 Înregistrează-te

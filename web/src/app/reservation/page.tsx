@@ -5,6 +5,7 @@ import MapProvider from "@/components/map/reservation/map-provider";
 import FishingSpot, { FishingSpotDTO } from "@/types/fishing-spot";
 import axios from "axios";
 import { LatLng } from "leaflet";
+import { FETCH_FISHING_SPOTS } from "@/lib/api";
 
 export default function Reservation() {
   const [selection, setSelection] = React.useState<number | null>(null);
@@ -17,7 +18,7 @@ export default function Reservation() {
   const sel = useCallback((s: number) => setSelection(s), []);
 
   const fetchSpots = () => {
-    axios.get<FishingSpotDTO[]>("/api/fishing-spot/all").then((response) => {
+    axios.get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS).then((response) => {
       const recvSpots = response.data.map(({ name, perimeter }) => ({
         name,
         bounds: perimeter.map(

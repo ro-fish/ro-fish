@@ -4,29 +4,73 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
+import { REGISTER } from "@/lib/api";
 
-export default function SignupPage() {
-  const [fullName, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default function RegisterPage() {
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [fullName, setName] = useState("");
+  
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("aaa");
+  
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("/api/auth/register", {
+
+    if (!validatePassword(password)) {
+      return;
+    }
+
+      axios.post(REGISTER, {
         email,
         fullName,
         password,
-      });
+      }).then((response) => {
+
+      if (response.status === 409) {
+        setEmailError("Cont deja existent!");
+        return;
+      }
 
       if (response.data.success) {
         router.push("/login");
       }
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Eroare la înregistrare");
+    });
+  };
+
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      setPasswordError("Parola trebuie să aibă minim 8 caractere.");
+      return false;
     }
+    if (!hasUpperCase) {
+      setPasswordError("Parola trebuie să conțină cel puțin o literă mare.");
+      return false;
+    }
+    if (!hasLowerCase) {
+      setPasswordError("Parola trebuie să conțină cel puțin o literă mică.");
+      return false;
+    }
+    if (!hasNumber) {
+      setPasswordError("Parola trebuie să conțină cel puțin un număr.");
+      return false;
+    }
+    if (!hasSpecialChar) {
+      setPasswordError("Parola trebuie să conțină cel puțin un caracter special.");
+      return false;
+    }
+
+    setPasswordError("");
+    return true;
   };
 
   return (
@@ -70,10 +114,11 @@ export default function SignupPage() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {setEmail(e.target.value); setEmailError("");}}
                 className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
                 required
               />
+              {emailError !== "" && <label className="text-red-500 text-sm">{emailError}</label>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -82,10 +127,11 @@ export default function SignupPage() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {setPassword(e.target.value); setPasswordError("");}}
                 className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
                 required
               />
+              {passwordError !== "" && <label className="text-red-500 text-sm">{passwordError}</label>}
             </div>
             <button
               type="submit"
