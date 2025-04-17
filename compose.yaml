@@ -1,3 +1,15 @@
+### Variabile folosite:
+# ROFISH_DB_HOST = adresa SGBD (default: localhost)
+# ROFISH_DB_PORT = port SGBD (default: 3306)
+
+# ROFISH_DB = nume baza de date
+# ROFISH_DB_USER = utilizator BD
+# ROFISH_DB_PASSWORD = parola utilizator
+
+# ROFISH_SERVER_ADDRESS = adresa server backend (default: localhost)
+# ROFISH_SERVER_PORT = port server backend (default: 8080)
+###
+
 services:
   database:
     image: mysql:8.0
@@ -6,8 +18,17 @@ services:
       MYSQL_USER: ${ROFISH_DB_USER}
       MYSQL_PASSWORD: ${ROFISH_DB_PASSWORD}
       MYSQL_DATABASE: ${ROFISH_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$${ROFISH_DB_USER} -p$${ROFISH_DB_PASSWORD}"]
+      interval: 2m
+      timeout: 30s
+      retries: 5
+      start_period: 10s
+    networks:
+      - veth-backend-database
     volumes:
       - rofish-db:/var/lib/mysql
+    # For debug only
     ports:
       - "3306:3306"
 
@@ -16,15 +37,22 @@ services:
       context: ./server
       dockerfile: Dockerfile
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server
+    env_file:
+      - .env
     environment:
-      ROFISH_DB_USER: ${ROFISH_DB_USER}
-      ROFISH_DB_PASSWORD: ${ROFISH_DB_PASSWORD}
-      ROFISH_DB_NAME: ${ROFISH_DB}
+      ROFISH_DB_HOST: database
+    networks:
+      - veth-backend-database
+      - veth-frontend-backend
+    # For debug only
     ports:
       - "8080:8080"
-    volumes:
-      - ./backend:/app
 
   frontend:
     build:
@@ -32,10 +60,20 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - backend
+    environment:
+      ROFISH_SERVER_ADDRESS: backend
+    networks:
+      - veth-frontend-backend
     ports:
       - "3000:3000"
     volumes:
       - ./web:/app
+
+networks:
+  veth-frontend-backend:
+    driver: bridge
+  veth-backend-database:
+    driver: bridge
 
 volumes:
   rofish-db:
