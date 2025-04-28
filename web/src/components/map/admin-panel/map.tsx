@@ -280,4 +280,3 @@ const MapEditor = () => {
 };
 
 export default MapEditor;
-
