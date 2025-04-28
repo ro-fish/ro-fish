@@ -13,13 +13,26 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-      axios.post(LOGIN, { email, password }).then((response) => {
+    try {
+      const response = await axios.post(LOGIN, { email, password });
       if (response.data.token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-        localStorage.setItem("authToken", response.data.token); // FIXME: save the token somewhere safe
+        localStorage.setItem("authToken", response.data.token);
+        
+        // Declanșează eveniment personalizat
+        window.dispatchEvent(new CustomEvent('authChange', { 
+          detail: { isLoggedIn: true } 
+        }));
+        
         router.push("/dashboard");
       }
-    }, (reason) => {alert(reason);});
+    } catch (error) {
+      alert("Autentificare eșuată. Te rugăm să verifici datele introduse.");
+      console.error("Login error:", error);
+      // Reset the form fields
+      setEmail("");
+      setPassword("");
+    }
   };
 
   return (
