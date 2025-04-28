@@ -23,12 +23,12 @@ services:
       interval: 2m
       timeout: 30s
       retries: 5
-      start_period: 10s
+      start_period: 15s
     networks:
       - veth-backend-database
     volumes:
       - rofish-db:/var/lib/mysql
-    # For debug only
+    # Debug only
     ports:
       - "3306:3306"
 
@@ -50,7 +50,7 @@ services:
     networks:
       - veth-backend-database
       - veth-frontend-backend
-    # For debug only
+    # Debug only
     ports:
       - "8080:8080"
 
