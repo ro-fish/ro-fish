@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "prepare": "cd .. && husky"
   },
   "dependencies": {
     "axios": "^1.8.3",
@@ -26,8 +30,15 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
+    "eslint-config-prettier": "^10.1.2",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format && npm run lint"
+    }
   }
 }
