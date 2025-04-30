@@ -6,14 +6,14 @@ type FishingSpot = {
 };
 
 export type FishingSpotDTO = {
-    name: string;
-    id?: string;
-    perimeter: CoordinateDTO[];
+  name: string;
+  id?: string;
+  perimeter: CoordinateDTO[];
 };
 
 export type CoordinateDTO = {
-    latitude: number;
-    longitude: number;
+  latitude: number;
+  longitude: number;
 };
 
 export default FishingSpot;

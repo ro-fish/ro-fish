@@ -8,12 +8,16 @@ import {
   CircleMarker,
   Polyline,
   Polygon,
-  Tooltip
+  Tooltip,
 } from "react-leaflet";
 import { latLng, LatLng } from "leaflet";
 import MapTile from "../map-tile";
 import FishingSpot, { FishingSpotDTO } from "@/types/fishing-spot";
-import { CREATE_FISHING_SPOT, DELETE_FISHING_SPOT, FETCH_FISHING_SPOTS } from "@/lib/api";
+import {
+  CREATE_FISHING_SPOT,
+  DELETE_FISHING_SPOT,
+  FETCH_FISHING_SPOTS,
+} from "@/lib/api";
 
 const ClickHandler = ({ handler }: { handler: (point: LatLng) => void }) => {
   useMapEvents({
@@ -38,12 +42,13 @@ const MapEditor = () => {
 
   const fetchSpots = () => {
     setIsLoading(true);
-    axios.get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS)
+    axios
+      .get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS)
       .then((response) => {
         const recvSpots = response.data.map(({ name, perimeter }) => ({
           name,
           bounds: perimeter.map(({ latitude, longitude }) =>
-            latLng(latitude, longitude)
+            latLng(latitude, longitude),
           ),
         }));
         setSpots(recvSpots);
@@ -61,7 +66,9 @@ const MapEditor = () => {
 
   const handleSaveLocation = () => {
     if (trail.length < 3) {
-      alert("Un loc de pescuit necesită cel puțin 3 puncte pentru a forma un poligon");
+      alert(
+        "Un loc de pescuit necesită cel puțin 3 puncte pentru a forma un poligon",
+      );
       return;
     }
     if (!name.trim()) {
@@ -79,7 +86,8 @@ const MapEditor = () => {
     };
 
     setIsLoading(true);
-    axios.post(CREATE_FISHING_SPOT, serializedSpot)
+    axios
+      .post(CREATE_FISHING_SPOT, serializedSpot)
       .then(() => {
         setSpots([...spots, spot]);
         setTrail([]);
@@ -97,7 +105,8 @@ const MapEditor = () => {
     if (selectedSpot === null || !name.trim()) return;
 
     setIsLoading(true);
-    axios.delete(`${DELETE_FISHING_SPOT}/${selectedSpot}`, {})
+    axios
+      .delete(`${DELETE_FISHING_SPOT}/${selectedSpot}`, {})
       .then(() => {
         const newSpots = spots.filter((_, index) => index !== selectedSpot);
         setSpots(newSpots);
@@ -130,8 +139,12 @@ const MapEditor = () => {
     <div className="min-h-screen bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-400 mb-2"> {/* Reduced size by ~30% */}
-            {editMode ? "Editare Loc de Pescuit" : "Administrare Locuri de Pescuit"}
+          <h1 className="text-3xl font-bold text-blue-400 mb-2">
+            {" "}
+            {/* Reduced size by ~30% */}
+            {editMode
+              ? "Editare Loc de Pescuit"
+              : "Administrare Locuri de Pescuit"}
           </h1>
         </div>
 
@@ -143,16 +156,16 @@ const MapEditor = () => {
               style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
               className="border border-gray-700 shadow-lg"
             >
-              <MapTile/>
+              <MapTile />
 
               {(!hideSpots || !editMode) &&
                 spots.map((spot, index) => (
                   <Polygon
                     key={index}
-                    pathOptions={{ 
+                    pathOptions={{
                       color: selectedSpot === index ? "#d97706" : "#10b981", // Less vibrant yellow and green
                       weight: selectedSpot === index ? 3 : 2,
-                      fillOpacity: 0.2
+                      fillOpacity: 0.2,
                     }}
                     positions={spot.bounds}
                     eventHandlers={{
@@ -222,7 +235,10 @@ const MapEditor = () => {
                     onChange={() => setHideSpots(!hideSpots)}
                     className="h-5 w-5 text-blue-400 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
                   />
-                  <label htmlFor="hideSpots" className="ml-3 block text-sm text-gray-300">
+                  <label
+                    htmlFor="hideSpots"
+                    className="ml-3 block text-sm text-gray-300"
+                  >
                     Ascunde alte locuri
                   </label>
                 </div>

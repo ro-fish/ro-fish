@@ -16,14 +16,17 @@ export default function LoginPage() {
     try {
       const response = await axios.post(LOGIN, { email, password });
       if (response.data.token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        axios.defaults.headers.common["Authorization"] =
+          `Bearer ${response.data.token}`;
         localStorage.setItem("authToken", response.data.token);
-        
+
         // Declanșează eveniment personalizat
-        window.dispatchEvent(new CustomEvent('authChange', { 
-          detail: { isLoggedIn: true } 
-        }));
-        
+        window.dispatchEvent(
+          new CustomEvent("authChange", {
+            detail: { isLoggedIn: true },
+          }),
+        );
+
         router.push("/dashboard");
       }
     } catch (error) {

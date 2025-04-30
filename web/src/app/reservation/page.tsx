@@ -10,7 +10,7 @@ import { FETCH_FISHING_SPOTS } from "@/lib/api";
 export default function Reservation() {
   const [selection, setSelection] = React.useState<number | null>(null);
   const [date, setDate] = React.useState(
-    new Date(Date.now() + 86400000) /*FIXME*/
+    new Date(Date.now() + 86400000) /*FIXME*/,
   );
   const [personCount, setPersonCount] = React.useState(1);
   const [fishingSpots, setFishingSpots] = React.useState<FishingSpot[]>([]);
@@ -22,7 +22,7 @@ export default function Reservation() {
       const recvSpots = response.data.map(({ name, perimeter }) => ({
         name,
         bounds: perimeter.map(
-          ({ latitude, longitude }) => new LatLng(latitude, longitude)
+          ({ latitude, longitude }) => new LatLng(latitude, longitude),
         ),
       }));
 

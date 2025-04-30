@@ -1,9 +1,9 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import bcrypt from 'bcryptjs';
-import { v4 as uuidv4 } from 'uuid';
+import { promises as fs } from "fs";
+import path from "path";
+import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 
-const usersPath = path.join(process.cwd(), 'src/lib/users.json');
+const usersPath = path.join(process.cwd(), "src/lib/users.json");
 
 interface User {
   id: string;
@@ -12,12 +12,12 @@ interface User {
   password: string;
 }
 
-export async function createUser(userData: Omit<User, 'id'>) {
+export async function createUser(userData: Omit<User, "id">) {
   const users = await getUsers();
-  const existingUser = users.find(user => user.email === userData.email);
-  
+  const existingUser = users.find((user) => user.email === userData.email);
+
   if (existingUser) {
-    throw new Error('User already exists');
+    throw new Error("User already exists");
   }
 
   const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -34,15 +34,15 @@ export async function createUser(userData: Omit<User, 'id'>) {
 
 export async function verifyUser(email: string, password: string) {
   const users = await getUsers();
-  const user = users.find(user => user.email === email);
+  const user = users.find((user) => user.email === email);
 
   if (!user) {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) {
-    throw new Error('Invalid password');
+    throw new Error("Invalid password");
   }
 
   return user;
@@ -50,7 +50,7 @@ export async function verifyUser(email: string, password: string) {
 
 async function getUsers(): Promise<User[]> {
   try {
-    const data = await fs.readFile(usersPath, 'utf-8');
+    const data = await fs.readFile(usersPath, "utf-8");
     return JSON.parse(data);
   } catch (error) {
     return [];

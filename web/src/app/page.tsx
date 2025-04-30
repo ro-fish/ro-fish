@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -11,19 +11,27 @@ export default function Home() {
           <p className="text-xl text-gray-300 mb-8">
             Comunitatea ta de pescuit în apele României
           </p>
-          
+
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="p-6 bg-gray-800 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">🎣 Tehnici de pescuit</h3>
-              <p className="text-gray-400">Învață cele mai eficiente metode de pescuit în apele noastre</p>
+              <h3 className="text-xl font-semibold mb-4">
+                🎣 Tehnici de pescuit
+              </h3>
+              <p className="text-gray-400">
+                Învață cele mai eficiente metode de pescuit în apele noastre
+              </p>
             </div>
             <div className="p-6 bg-gray-800 rounded-lg">
               <h3 className="text-xl font-semibold mb-4">🐟 Specii de pești</h3>
-              <p className="text-gray-400">Descoperă biodiversitatea acvatică a României</p>
+              <p className="text-gray-400">
+                Descoperă biodiversitatea acvatică a României
+              </p>
             </div>
             <div className="p-6 bg-gray-800 rounded-lg">
               <h3 className="text-xl font-semibold mb-4">📅 Evenimente</h3>
-              <p className="text-gray-400">Participă la competiții și întâlniri de pescuit</p>
+              <p className="text-gray-400">
+                Participă la competiții și întâlniri de pescuit
+              </p>
             </div>
           </div>
 

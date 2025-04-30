@@ -10,10 +10,10 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const [fullName, setName] = useState("");
-  
+
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("aaa");
-  
+
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -24,21 +24,22 @@ export default function RegisterPage() {
       return;
     }
 
-      axios.post(REGISTER, {
+    axios
+      .post(REGISTER, {
         email,
         fullName,
         password,
-      }).then((response) => {
+      })
+      .then((response) => {
+        if (response.status === 409) {
+          setEmailError("Cont deja existent!");
+          return;
+        }
 
-      if (response.status === 409) {
-        setEmailError("Cont deja existent!");
-        return;
-      }
-
-      if (response.data.success) {
-        router.push("/login");
-      }
-    });
+        if (response.data.success) {
+          router.push("/login");
+        }
+      });
   };
 
   const validatePassword = (password: string) => {
@@ -65,7 +66,9 @@ export default function RegisterPage() {
       return false;
     }
     if (!hasSpecialChar) {
-      setPasswordError("Parola trebuie să conțină cel puțin un caracter special.");
+      setPasswordError(
+        "Parola trebuie să conțină cel puțin un caracter special.",
+      );
       return false;
     }
 
@@ -114,11 +117,16 @@ export default function RegisterPage() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => {setEmail(e.target.value); setEmailError("");}}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError("");
+                }}
                 className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
                 required
               />
-              {emailError !== "" && <label className="text-red-500 text-sm">{emailError}</label>}
+              {emailError !== "" && (
+                <label className="text-red-500 text-sm">{emailError}</label>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -127,11 +135,16 @@ export default function RegisterPage() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => {setPassword(e.target.value); setPasswordError("");}}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setPasswordError("");
+                }}
                 className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
                 required
               />
-              {passwordError !== "" && <label className="text-red-500 text-sm">{passwordError}</label>}
+              {passwordError !== "" && (
+                <label className="text-red-500 text-sm">{passwordError}</label>
+              )}
             </div>
             <button
               type="submit"

@@ -5,4 +5,4 @@ export const CHECK_AUTH = "/api/auth/me";
 
 export const FETCH_FISHING_SPOTS = "/api/fishing-spots/all";
 export const CREATE_FISHING_SPOT = "/api/fishing-spots/spot";
-export const DELETE_FISHING_SPOT = "/api/fishing-spots/spot"; 
+export const DELETE_FISHING_SPOT = "/api/fishing-spots/spot";

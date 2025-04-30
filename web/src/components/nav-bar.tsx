@@ -26,10 +26,13 @@ export default function NavBar() {
       setIsLoggedIn(e.detail.isLoggedIn);
     };
 
-    window.addEventListener('authChange', handleAuthChange as EventListener);
-    
+    window.addEventListener("authChange", handleAuthChange as EventListener);
+
     return () => {
-      window.removeEventListener('authChange', handleAuthChange as EventListener);
+      window.removeEventListener(
+        "authChange",
+        handleAuthChange as EventListener,
+      );
     };
   }, []);
 
@@ -37,12 +40,14 @@ export default function NavBar() {
     try {
       await axios.get(LOGOUT);
       localStorage.removeItem("authToken");
-      delete axios.defaults.headers.common['Authorization'];
-      
+      delete axios.defaults.headers.common["Authorization"];
+
       // Anunță toate componentele
-      window.dispatchEvent(new CustomEvent('authChange', { 
-        detail: { isLoggedIn: false } 
-      }));
+      window.dispatchEvent(
+        new CustomEvent("authChange", {
+          detail: { isLoggedIn: false },
+        }),
+      );
 
       router.push("/");
       router.refresh();
@@ -76,13 +81,22 @@ export default function NavBar() {
           {/* Partea din mijloc - Navigație (doar când e logat) */}
           {isLoggedIn && (
             <div className="hidden md:flex space-x-6">
-              <Link href="/dashboard" className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
+              <Link
+                href="/dashboard"
+                className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+              >
                 Dashboard
               </Link>
-              <Link href="/dashboard/spots" className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
+              <Link
+                href="/dashboard/spots"
+                className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+              >
                 Locuri
               </Link>
-              <Link href="/reservations" className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
+              <Link
+                href="/reservations"
+                className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+              >
                 Rezervări
               </Link>
             </div>
@@ -95,17 +109,33 @@ export default function NavBar() {
                 onClick={handleLogout}
                 className="bg-gray-800 text-red-400 hover:bg-gray-700 hover:text-red-300 px-4 py-2 rounded-md text-sm font-medium flex items-center border border-transparent hover:border-red-400/30 transition-all"
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
                 </svg>
                 Delogare
               </button>
             ) : (
               <div className="flex space-x-4">
-                <Link href="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                <Link
+                  href="/login"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
                   Autentificare
                 </Link>
-                <Link href="/register" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                <Link
+                  href="/register"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
                   Înregistrare
                 </Link>
               </div>

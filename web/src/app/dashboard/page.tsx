@@ -15,7 +15,7 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold text-blue-400 text-center mb-8">
               Panou Administrare
             </h1>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               <button
                 onClick={() => router.push("dashboard/spots")}
@@ -30,7 +30,7 @@ const Dashboard = () => {
                   </p>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => router.push("dashboard/users")}
                 className="bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg p-6 transition-colors"
@@ -54,10 +54,12 @@ const Dashboard = () => {
               </h2>
               <div className="text-gray-300">
                 {/* Placeholder for reservations */}
-                <p className="text-center py-8">Momentan nu ai nicio rezervare</p>
+                <p className="text-center py-8">
+                  Momentan nu ai nicio rezervare
+                </p>
               </div>
             </div>
-            
+
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
               <h2 className="text-2xl font-semibold text-blue-400 mb-4">
                 Noutăți
