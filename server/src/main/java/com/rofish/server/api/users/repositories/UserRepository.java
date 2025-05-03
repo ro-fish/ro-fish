@@ -1,6 +1,6 @@
-package com.rofish.server.repositories;
+package com.rofish.server.api.users.repositories;
 
-import com.rofish.server.models.User;
+import com.rofish.server.api.users.models.User;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.repository.CrudRepository;
 

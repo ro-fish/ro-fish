@@ -1,4 +1,4 @@
-package com.rofish.server.models;
+package com.rofish.server.api.users.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,6 +1,8 @@
-package com.rofish.server.controllers;
+package com.rofish.server.api.users.controllers;
 
-import com.rofish.server.views.AuthView;
+import com.rofish.server.api.users.dtos.JwtTokenData;
+import com.rofish.server.api.users.dtos.LoginData;
+import com.rofish.server.api.users.dtos.RegisterData;
 import com.rofish.server.components.services.AuthManager;
 import com.rofish.server.components.services.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +41,7 @@ public class AuthController {
             }
     )
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<String> register(@Valid @RequestBody AuthView request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterData request) {
         if (authenticationManager.registerUser(request.email(), request.fullName(), request.password())) {
             return ResponseEntity.ok().body("Registered successfully.");
         }
@@ -56,7 +58,7 @@ public class AuthController {
             }
     )
     @PostMapping(value = "/login", consumes = "application/json")
-    public ResponseEntity<TokenResponse> login(@RequestBody AuthView request) {
+    public ResponseEntity<JwtTokenData> login(@Valid @RequestBody LoginData request) {
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
@@ -64,7 +66,7 @@ public class AuthController {
 
             ResponseCookie cookie = ResponseCookie.from("auth", jwtTokenProvider.generateToken(authentication)).httpOnly(true).path("/").maxAge(3600).sameSite("Strict").build();
 
-            TokenResponse response = new TokenResponse(jwtTokenProvider.generateToken(authentication));
+            JwtTokenData response = new JwtTokenData(jwtTokenProvider.generateToken(authentication));
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
         } catch (UsernameNotFoundException | BadCredentialsException e) {
             return ResponseEntity.status(401).build();
@@ -88,8 +90,5 @@ public class AuthController {
     public ResponseEntity<String> logout() {
         ResponseCookie cookie = ResponseCookie.from("auth", "").httpOnly(true).path("/").maxAge(0).sameSite("Strict").build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Logged out successfully.");
-    }
-
-    public record TokenResponse(String token) {
     }
 }

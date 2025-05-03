@@ -2,8 +2,8 @@ package com.rofish.server.components;
 
 import com.rofish.server.components.services.AuthManager;
 import com.rofish.server.components.services.JwtTokenProvider;
-import com.rofish.server.models.User;
-import com.rofish.server.repositories.UserRepository;
+import com.rofish.server.api.users.models.User;
+import com.rofish.server.api.users.repositories.UserRepository;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

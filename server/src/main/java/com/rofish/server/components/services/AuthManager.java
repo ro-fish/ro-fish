@@ -1,7 +1,7 @@
 package com.rofish.server.components.services;
 
-import com.rofish.server.models.User;
-import com.rofish.server.repositories.UserRepository;
+import com.rofish.server.api.users.models.User;
+import com.rofish.server.api.users.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

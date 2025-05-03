@@ -1,5 +1,6 @@
-package com.rofish.server.models;
+package com.rofish.server.api.posts.models;
 
+import com.rofish.server.api.users.models.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 

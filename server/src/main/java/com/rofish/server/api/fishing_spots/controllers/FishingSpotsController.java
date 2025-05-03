@@ -1,8 +1,8 @@
-package com.rofish.server.controllers;
+package com.rofish.server.api.fishing_spots.controllers;
 
-import com.rofish.server.views.FishingSpotView;
-import com.rofish.server.models.FishingSpot;
-import com.rofish.server.repositories.FishingSpotRepository;
+import com.rofish.server.api.fishing_spots.dtos.FishingSpotCreationData;
+import com.rofish.server.api.fishing_spots.models.FishingSpot;
+import com.rofish.server.api.fishing_spots.repositories.FishingSpotRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,9 +32,9 @@ public class FishingSpotsController {
             }
     )
     @GetMapping("/all")
-    public ResponseEntity<List<FishingSpotView>> getAllFishingSpots() {
-        List<FishingSpotView> spots = new ArrayList<>();
-        repository.findAll().forEach(spot -> spots.add(new FishingSpotView(spot)));
+    public ResponseEntity<List<FishingSpotCreationData>> getAllFishingSpots() {
+        List<FishingSpotCreationData> spots = new ArrayList<>();
+        repository.findAll().forEach(spot -> spots.add(new FishingSpotCreationData(spot)));
         return ResponseEntity.ok().body(spots);
     }
 
@@ -47,7 +47,7 @@ public class FishingSpotsController {
     )
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(value = "/spot", consumes = "application/json")
-    public ResponseEntity<String> addFishingSpot(@Valid @RequestBody FishingSpotView spot) {
+    public ResponseEntity<String> addFishingSpot(@Valid @RequestBody FishingSpotCreationData spot) {
         repository.save(new FishingSpot(spot.name(), spot.perimeter()));
         return ResponseEntity.ok().body("Fishing spot added successfully.");
     }

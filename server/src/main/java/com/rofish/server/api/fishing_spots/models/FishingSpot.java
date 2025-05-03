@@ -1,4 +1,4 @@
-package com.rofish.server.models;
+package com.rofish.server.api.fishing_spots.models;
 
 import jakarta.persistence.*;
 
