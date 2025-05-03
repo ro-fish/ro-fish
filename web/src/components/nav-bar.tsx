@@ -99,6 +99,12 @@ export default function NavBar() {
               >
                 Rezervări
               </Link>
+              <Link
+                href="/dashboard/news"
+                className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                Știri
+              </Link>
             </div>
           )}
 
