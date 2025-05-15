@@ -1,6 +1,6 @@
 package com.rofish.server.api.users.dtos;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
-public record LoginData(@Valid String email, @Valid String password) {
+public record LoginData(@NotEmpty String email, @NotEmpty String password) {
 }

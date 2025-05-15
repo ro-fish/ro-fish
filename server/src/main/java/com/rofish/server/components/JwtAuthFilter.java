@@ -5,6 +5,7 @@ import com.rofish.server.components.services.JwtTokenProvider;
 import com.rofish.server.api.users.models.User;
 import com.rofish.server.api.users.repositories.UserRepository;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -84,7 +85,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             try {
                 jwtTokenProvider.validateToken(token);
-            } catch (MalformedJwtException e) {
+            } catch (MalformedJwtException | SignatureException e) {
                 return;
             } catch (Exception e) {
                 throw new ServletException("Invalid JWT token", e);

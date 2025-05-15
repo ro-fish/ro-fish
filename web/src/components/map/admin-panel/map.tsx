@@ -45,12 +45,15 @@ const MapEditor = () => {
     axios
       .get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS)
       .then((response) => {
-        const recvSpots = response.data.map(({ name, perimeter }) => ({
-          name,
-          bounds: perimeter.map(({ latitude, longitude }) =>
-            latLng(latitude, longitude),
-          ),
-        }));
+        const recvSpots = response.data.map(
+          ({ fishingSpotId, name, perimeter }) => ({
+            fishingSpotId,
+            name,
+            bounds: perimeter.map(({ latitude, longitude }) =>
+              latLng(latitude, longitude),
+            ),
+          }),
+        );
         setSpots(recvSpots);
       })
       .catch((reason) => {

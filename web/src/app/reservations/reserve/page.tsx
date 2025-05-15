@@ -6,6 +6,7 @@ import FishingSpot, { FishingSpotDTO } from "@/types/fishing-spot";
 import axios from "axios";
 import { LatLng } from "leaflet";
 import { FETCH_FISHING_SPOTS } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function Reservation() {
   const [selection, setSelection] = React.useState<number | null>(null);
@@ -15,16 +16,21 @@ export default function Reservation() {
   const [personCount, setPersonCount] = React.useState(1);
   const [fishingSpots, setFishingSpots] = React.useState<FishingSpot[]>([]);
 
+  const router = useRouter();
+
   const sel = useCallback((s: number) => setSelection(s), []);
 
   const fetchSpots = () => {
     axios.get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS).then((response) => {
-      const recvSpots = response.data.map(({ name, perimeter }) => ({
-        name,
-        bounds: perimeter.map(
-          ({ latitude, longitude }) => new LatLng(latitude, longitude),
-        ),
-      }));
+      const recvSpots = response.data.map(
+        ({ fishingSpotId, name, perimeter }) => ({
+          fishingSpotId,
+          name,
+          bounds: perimeter.map(
+            ({ latitude, longitude }) => new LatLng(latitude, longitude),
+          ),
+        }),
+      );
 
       setFishingSpots(recvSpots);
     });
@@ -46,7 +52,15 @@ export default function Reservation() {
       return;
     }
 
-    alert("rezervat");
+    axios
+      .post("/api/reservations/reserve", {
+        fishingSpotId: selection,
+        reservationDate: date,
+        invitedPeople: personCount,
+      })
+      .then((_) => {
+        router.push("/reservations");
+      });
   };
 
   return (
