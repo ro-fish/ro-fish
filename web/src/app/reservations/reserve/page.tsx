@@ -32,6 +32,9 @@ export default function Reservation() {
         }),
       );
 
+      for (const spot of recvSpots) {
+        console.log("pst_spot:" + response.data[0].name);
+      }
       setFishingSpots(recvSpots);
     });
   };

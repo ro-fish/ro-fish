@@ -28,15 +28,17 @@ const Map = ({
             key={spot.fishingSpotId}
             pathOptions={{
               color:
-                selection !== null && selection === fishingSpotId
+                selection !== null && selection === spot.fishingSpotId
                   ? "green"
                   : "blue",
             }}
             positions={spot.bounds}
             eventHandlers={{
               click: () => {
-                onSelect(fishingSpotId);
-                setSelection(fishingSpotId);
+                console.log("pst_spot:" + spot.fishingSpotId);
+
+                onSelect(spot.fishingSpotId);
+                setSelection(spot.fishingSpotId);
               },
             }}
           >
