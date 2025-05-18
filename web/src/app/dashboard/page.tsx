@@ -32,6 +32,20 @@ const Dashboard = () => {
               </button>
 
               <button
+                onClick={() => router.push("dashboard/news")}
+                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg p-6 transition-colors"
+              >
+                <div className="text-center">
+                  <h2 className="text-xl font-semibold text-blue-400 mb-2">
+                    Articole știri
+                  </h2>
+                  <p className="text-gray-300">
+                    Adaugă un nou articol pe pagina de știri
+                  </p>
+                </div>
+              </button>
+
+              <button
                 onClick={() => router.push("dashboard/users")}
                 className="bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg p-6 transition-colors"
               >
