@@ -22,19 +22,23 @@ const Map = ({
     >
       <MapTile />
 
-      {fishingSpots.map((spot, index) => {
+      {fishingSpots.map((spot) => {
         return (
           <Polygon
-            key={index}
+            key={spot.fishingSpotId}
             pathOptions={{
               color:
-                selection !== null && selection === index ? "green" : "blue",
+                selection !== null && selection === spot.fishingSpotId
+                  ? "green"
+                  : "blue",
             }}
             positions={spot.bounds}
             eventHandlers={{
               click: () => {
-                onSelect(index);
-                setSelection(index);
+                console.log("pst_spot:" + spot.fishingSpotId);
+
+                onSelect(spot.fishingSpotId);
+                setSelection(spot.fishingSpotId);
               },
             }}
           >

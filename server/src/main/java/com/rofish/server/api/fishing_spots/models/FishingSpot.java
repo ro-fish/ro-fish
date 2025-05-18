@@ -24,6 +24,10 @@ public class FishingSpot {
     public FishingSpot() {
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

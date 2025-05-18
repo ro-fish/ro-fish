@@ -15,6 +15,7 @@ export const middleware = async (request: NextRequest) => {
     }
   } catch (error) {}
 
+  return NextResponse.next();
   return NextResponse.redirect(new URL("/login", request.url));
 };
 
