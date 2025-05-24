@@ -5,8 +5,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name = "users")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -19,32 +28,13 @@ public class User {
     private String fullName;
 
     @NotNull
-    private String password;
+    private String passwordHash;
     @NotNull
     private String passwordSalt;
     @NotNull
-    private boolean isAdmin;
-
-    public User(String email, String fullName, String password, String passwordSalt, boolean isAdmin) {
-        this.email = email;
-        this.fullName = fullName;
-        this.password = password;
-        this.passwordSalt = passwordSalt;
-        this.isAdmin = isAdmin;
-    }
-
-    public User() {
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPasswordSalt() {
-        return passwordSalt;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
+    @Setter
+    private Boolean isAdmin;
+    @NotNull
+    @Setter
+    private Boolean isActive = true;
 }

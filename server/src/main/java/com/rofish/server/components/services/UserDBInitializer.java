@@ -30,7 +30,9 @@ public class UserDBInitializer {
             final String salt = BCrypt.gensalt();
             final String hashedPassword = BCrypt.hashpw(ROOT_PASSWORD, salt);
 
-            final User root = new User(ROOT_EMAIL, ROOT_FULL_NAME, hashedPassword, salt, true);
+            final User root = User.builder().email(ROOT_EMAIL).fullName(ROOT_FULL_NAME)
+                .passwordHash(hashedPassword).passwordSalt(salt).isAdmin(true).isActive(true)
+                .build();
             userRepository.save(root);
         }
     }

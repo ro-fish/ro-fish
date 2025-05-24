@@ -1,15 +1,17 @@
 package com.rofish.server.api.fishing_spots.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 @Entity(name = "fishing_spots")
 public class FishingSpot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -22,18 +24,6 @@ public class FishingSpot {
     }
 
     public FishingSpot() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Coordinates> getLimits() {
-        return limits;
     }
 
     @Embeddable

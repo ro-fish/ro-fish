@@ -2,8 +2,10 @@ package com.rofish.server.api.reservations.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public record ReservationCreationData(@NotEmpty long fishingSpotId, @NotEmpty LocalDateTime reservationDate,
-                                      @NotEmpty long invitedPeople) {
+public record ReservationCreationData(@NotEmpty Long fishingSpotId,
+                                      @NotEmpty LocalDate reservationDate,
+                                      @NotEmpty Long invitedPeople) {
+
 }

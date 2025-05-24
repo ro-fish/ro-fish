@@ -24,7 +24,8 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtLifetime);
 
-        JwtBuilder builder = Jwts.builder().subject(username).issuedAt(now).expiration(expiryDate).signWith(jwtSigningKey);
+        JwtBuilder builder = Jwts.builder().subject(username).issuedAt(now).expiration(expiryDate)
+            .signWith(jwtSigningKey);
         return builder.compact();
     }
 

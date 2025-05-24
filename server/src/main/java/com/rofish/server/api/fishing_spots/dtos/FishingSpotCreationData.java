@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record FishingSpotCreationData(@NotEmpty String name, @NotNull List<FishingSpot.Coordinates> perimeter) {
+public record FishingSpotCreationData(@NotEmpty String name,
+                                      @NotNull List<FishingSpot.Coordinates> perimeter) {
+
     public FishingSpotCreationData(FishingSpot spot) {
         this(spot.getName(), spot.getLimits());
     }

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -15,6 +15,7 @@ import java.util.Date;
 @Getter
 @Entity(name = "reservations")
 public class Reservation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -27,14 +28,14 @@ public class Reservation {
     private FishingSpot fishingSpot;
 
     @NotNull
-    private LocalDateTime reservationDate;
+    private LocalDate reservationDate;
 
     @NotNull
-    private long invitedPeople;
+    private Long invitedPeople;
 
     @Setter
     @NotNull
-    private boolean cancelled;
+    private Boolean cancelled;
 
     @NotNull
     private Date lastModify;

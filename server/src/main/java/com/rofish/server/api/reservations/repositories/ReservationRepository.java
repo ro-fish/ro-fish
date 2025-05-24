@@ -6,8 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationRepository extends CrudRepository<Reservation, Long> {
+
     List<Reservation> getReservationsByUser(@NotNull User user, Sort sort);
+
+    boolean existsByIdAndReservationDate(long id, @NotNull LocalDate reservationDate);
 }

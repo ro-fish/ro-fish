@@ -3,9 +3,11 @@ package com.rofish.server.api.reservations.dtos;
 import lombok.Builder;
 
 import java.util.Date;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
-public record ReservationData(long id, long fishingSpotId, LocalDateTime reservationDate, long invitedPeople,
-                              boolean cancelled, Date lastModify) {
+public record ReservationData(Long id, Long fishingSpotId, LocalDate reservationDate,
+                              Long invitedPeople,
+                              Boolean cancelled, Date lastModify) {
+
 }

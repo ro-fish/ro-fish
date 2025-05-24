@@ -40,7 +40,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return null;
         }
 
-        Cookie tokenCookie = Arrays.stream(cookies).filter(cookie -> "auth".equals(cookie.getName())).findFirst().orElse(null);
+        Cookie tokenCookie = Arrays.stream(cookies)
+            .filter(cookie -> "auth".equals(cookie.getName())).findFirst().orElse(null);
         if (tokenCookie != null) {
             return tokenCookie.getValue();
         }
@@ -49,7 +50,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Retrieve the JWT token from the request. First fetch it from the cookies. If not found, check Authorization.
+     * Retrieve the JWT token from the request. First fetch it from the cookies. If not found, check
+     * Authorization.
      *
      * @param request The processed request
      * @return The token as a string, or null if not found
@@ -71,11 +73,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     /**
      * Retrieve the user that made the request based on the JWT token.
      * <p>
-     * This method is called for every request. If the token is valid, set the authentication context (user and
-     * authorities), to be used in handling the request.
+     * This method is called for every request. If the token is valid, set the authentication
+     * context (user and authorities), to be used in handling the request.
      */
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+        throws ServletException, IOException {
         String token = getTokenFromRequest(request);
 
         try {
@@ -96,7 +100,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             User user = userRepository.getUserByEmail(username);
             List<GrantedAuthority> grantedAuthorities = AuthManager.getUserAuthorities(user);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                user, null, grantedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } finally {
             // Continue the chain no matter what
