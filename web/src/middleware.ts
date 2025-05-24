@@ -2,23 +2,56 @@ import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export const middleware = async (request: NextRequest) => {
+  const protectedPaths = ["/dashboard", "/reservations"];
+  const { pathname } = request.nextUrl;
+
+
+  // Check if the requested path is protected
+  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
+
+  // Allow non-protected paths to pass through
+  if (!isProtectedPath) {
+    return NextResponse.next();
+  }
+
   const token = request.cookies.get("auth")?.value;
+  // If no token and trying to access protected path, redirect to login
+  if (!token && isProtectedPath) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   try {
-    const response = await axios.get("http://localhost:8080/api/auth/me", {
+    const response = await axios.get("http://192.168.1.140:8080/api/auth/roles", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    if (response.status === 200) {
-      return NextResponse.next();
-    }
-  } catch (error) {}
+    const roles = response.data.roles || [];
 
-  return NextResponse.next();
-  return NextResponse.redirect(new URL("/login", request.url));
+    // Check if user has at least USER role for protected paths
+    if (!roles.includes("USER")) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Additional checks for admin-only paths
+    const isAdminPath = pathname.startsWith("/dashboard");
+
+    if (isAdminPath && !roles.includes("ADMIN")) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    // If auth check fails, redirect to login
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 };
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/reservation/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/reservations/:path*",
+    // Add other protected paths here if needed
+  ],
 };

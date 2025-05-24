@@ -7,16 +7,19 @@ import { useRouter } from "next/navigation";
 
 export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRoles, setUserRoles] = useState<string[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     // Verifică inițial starea
     const checkAuth = async () => {
       try {
-        await axios.get(CHECK_AUTH);
+        const response = await axios.get(CHECK_AUTH);
         setIsLoggedIn(true);
+        setUserRoles(response.data.roles || []);
       } catch {
         setIsLoggedIn(false);
+        setUserRoles([]);
       }
     };
     checkAuth();
@@ -24,6 +27,7 @@ export default function NavBar() {
     // Ascultă evenimente de auth change
     const handleAuthChange = (e: CustomEvent) => {
       setIsLoggedIn(e.detail.isLoggedIn);
+      setUserRoles(e.detail.roles || []);
     };
 
     window.addEventListener("authChange", handleAuthChange as EventListener);
@@ -45,7 +49,7 @@ export default function NavBar() {
       // Anunță toate componentele
       window.dispatchEvent(
         new CustomEvent("authChange", {
-          detail: { isLoggedIn: false },
+          detail: { isLoggedIn: false, roles: [] },
         }),
       );
 
@@ -55,6 +59,8 @@ export default function NavBar() {
       console.error("Logout error:", error);
     }
   };
+
+  const isAdmin = userRoles.includes("ADMIN");
 
   return (
     <nav className="bg-gray-900 border-b border-gray-700">
@@ -87,24 +93,26 @@ export default function NavBar() {
               >
                 Dashboard
               </Link>
-              <Link
+              {isAdmin && <Link
                 href="/dashboard/spots"
                 className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
               >
                 Locuri
-              </Link>
+              </Link>}
               <Link
                 href="/reservations"
                 className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
               >
                 Rezervări
               </Link>
-              <Link
-                href="/dashboard/news"
-                className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                Știri
-              </Link>
+              {isAdmin && (
+                <Link
+                  href="/dashboard/news"
+                  className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  Știri
+                </Link>
+              )}
             </div>
           )}
 

@@ -19,20 +19,30 @@ export default function LoginPage() {
         axios.defaults.headers.common["Authorization"] =
           `Bearer ${response.data.token}`;
         localStorage.setItem("authToken", response.data.token);
-
-        // Declanșează eveniment personalizat
+  
+        // Get user roles after successful login
+        const rolesResponse = await axios.get("/api/auth/roles", {
+          headers: {
+            Authorization: `Bearer ${response.data.token}`,
+          },
+        });
+  
+        // Trigger authChange event with roles
         window.dispatchEvent(
           new CustomEvent("authChange", {
-            detail: { isLoggedIn: true },
+            detail: { 
+              isLoggedIn: true,
+              roles: rolesResponse.data.roles || [] 
+            },
           }),
         );
-
-        router.push("/dashboard");
+  
+        router.push("/");
+        router.refresh(); // This will help ensure the page is fully reloaded
       }
     } catch (error) {
       alert("Autentificare eșuată. Te rugăm să verifici datele introduse.");
       console.error("Login error:", error);
-      // Reset the form fields
       setEmail("");
       setPassword("");
     }

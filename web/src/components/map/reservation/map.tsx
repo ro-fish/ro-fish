@@ -2,15 +2,16 @@
 
 import React from "react";
 import { MapContainer, Polygon, Tooltip } from "react-leaflet";
-import FishingSpot from "@/types/fishing-spot";
+import { FishingSpotDTO } from "@/types/fishing-spot";
 import MapTile from "../map-tile";
+import { latLng } from "leaflet";
 
 const Map = ({
   fishingSpots,
   onSelect,
 }: {
-  fishingSpots: FishingSpot[];
-  onSelect: (selection: number) => void;
+  fishingSpots: FishingSpotDTO[];
+  onSelect: (selection: FishingSpotDTO) => void;
 }) => {
   const [selection, setSelection] = React.useState<number | null>(null);
 
@@ -32,12 +33,12 @@ const Map = ({
                   ? "green"
                   : "blue",
             }}
-            positions={spot.bounds}
+            positions={spot.perimeter.map((({latitude, longitude}) => latLng(latitude, longitude)))}
             eventHandlers={{
               click: () => {
                 console.log("pst_spot:" + spot.fishingSpotId);
 
-                onSelect(spot.fishingSpotId);
+                onSelect(spot);
                 setSelection(spot.fishingSpotId);
               },
             }}
