@@ -33,7 +33,9 @@ const Map = ({
                   ? "green"
                   : "blue",
             }}
-            positions={spot.perimeter.map((({latitude, longitude}) => latLng(latitude, longitude)))}
+            positions={spot.perimeter.map(({ latitude, longitude }) =>
+              latLng(latitude, longitude),
+            )}
             eventHandlers={{
               click: () => {
                 console.log("pst_spot:" + spot.fishingSpotId);

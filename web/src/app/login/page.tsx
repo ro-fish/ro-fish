@@ -19,24 +19,24 @@ export default function LoginPage() {
         axios.defaults.headers.common["Authorization"] =
           `Bearer ${response.data.token}`;
         localStorage.setItem("authToken", response.data.token);
-  
+
         // Get user roles after successful login
         const rolesResponse = await axios.get("/api/auth/roles", {
           headers: {
             Authorization: `Bearer ${response.data.token}`,
           },
         });
-  
+
         // Trigger authChange event with roles
         window.dispatchEvent(
           new CustomEvent("authChange", {
-            detail: { 
+            detail: {
               isLoggedIn: true,
-              roles: rolesResponse.data.roles || [] 
+              roles: rolesResponse.data.roles || [],
             },
           }),
         );
-  
+
         router.push("/");
         router.refresh(); // This will help ensure the page is fully reloaded
       }

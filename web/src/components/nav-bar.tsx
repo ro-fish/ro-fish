@@ -93,12 +93,14 @@ export default function NavBar() {
               >
                 Dashboard
               </Link>
-              {isAdmin && <Link
-                href="/dashboard/spots"
-                className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                Locuri
-              </Link>}
+              {isAdmin && (
+                <Link
+                  href="/dashboard/spots"
+                  className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  Locuri
+                </Link>
+              )}
               <Link
                 href="/reservations"
                 className="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"

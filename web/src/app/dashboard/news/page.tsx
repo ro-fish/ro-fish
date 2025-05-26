@@ -11,7 +11,11 @@ export default function AddArticleForm() {
     mainImage: null as File | null,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -40,7 +44,13 @@ export default function AddArticleForm() {
 
     if (res.ok) {
       alert("Articol adăugat cu succes!");
-      setForm({ title: "", body: "", category: "pesti", thumbnail: null, mainImage: null });
+      setForm({
+        title: "",
+        body: "",
+        category: "pesti",
+        thumbnail: null,
+        mainImage: null,
+      });
     } else {
       alert("Eroare la adăugare.");
     }
@@ -54,7 +64,9 @@ export default function AddArticleForm() {
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Titlu</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Titlu
+            </label>
             <input
               name="title"
               value={form.title}
@@ -66,7 +78,9 @@ export default function AddArticleForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Categorie</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Categorie
+            </label>
             <select
               name="category"
               value={form.category}
@@ -82,7 +96,9 @@ export default function AddArticleForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Corpul articolului</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Corpul articolului
+            </label>
             <textarea
               name="body"
               value={form.body}
@@ -95,7 +111,9 @@ export default function AddArticleForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Thumbnail</label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Thumbnail
+            </label>
             <input
               name="thumbnail"
               type="file"
@@ -106,7 +124,9 @@ export default function AddArticleForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Imagine principală</label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Imagine principală
+            </label>
             <input
               name="mainImage"
               type="file"

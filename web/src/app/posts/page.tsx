@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image";
 import { FETCH_POSTS, ADD_POST, REMOVE_POST, CHECK_AUTH } from "@/lib/api";
 
 type Post = {
@@ -13,20 +14,33 @@ type Post = {
   updatedAt: string;
 };
 
-const monthNames = ["ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", 
-                   "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"];
+const monthNames = [
+  "ianuarie",
+  "februarie",
+  "martie",
+  "aprilie",
+  "mai",
+  "iunie",
+  "iulie",
+  "august",
+  "septembrie",
+  "octombrie",
+  "noiembrie",
+  "decembrie",
+];
 
 const Posts = () => {
-  console.log("..............................................................................");
+  console.log(
+    "..............................................................................",
+  );
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [newPost, setNewPost] = useState({
     title: "",
     content: "",
-    imageUrl: ""
+    imageUrl: "",
   });
-
 
   // Check if user is admin
   const checkAdminStatus = async () => {
@@ -41,13 +55,14 @@ const Posts = () => {
   const fetchPosts = () => {
     console.log("Fetching posts...");
     setIsLoading(true);
-    axios.get<Post[]>(FETCH_POSTS)
+    axios
+      .get<Post[]>(FETCH_POSTS)
       .then((response) => {
         // Ensure dates are properly formatted
-        const formattedPosts = response.data.map(post => ({
+        const formattedPosts = response.data.map((post) => ({
           ...post,
           createdAt: post.createdAt || new Date().toISOString(),
-          updatedAt: post.updatedAt || new Date().toISOString()
+          updatedAt: post.updatedAt || new Date().toISOString(),
         }));
         console.log("Fetched posts:", formattedPosts);
         setPosts(formattedPosts);
@@ -61,20 +76,25 @@ const Posts = () => {
   };
 
   useEffect(() => {
-    console.log("Component mounted, checking admin status and fetching posts...");
+    console.log(
+      "Component mounted, checking admin status and fetching posts...",
+    );
     checkAdminStatus();
     fetchPosts();
   }, []);
 
   const handleAddPost = () => {
     if (!newPost.title || !newPost.content) return;
-    
+
     setIsLoading(true);
-    axios.post(ADD_POST, newPost)
+    axios
+      .post(ADD_POST, newPost)
       .then(() => {
         fetchPosts();
         setNewPost({ title: "", content: "", imageUrl: "" });
-        (document.getElementById('add-post-modal') as HTMLDialogElement)?.close();
+        (
+          document.getElementById("add-post-modal") as HTMLDialogElement
+        )?.close();
       })
       .catch((error) => {
         console.error("Error adding post:", error);
@@ -86,9 +106,10 @@ const Posts = () => {
 
   const handleDeletePost = (id: number) => {
     if (!window.confirm("Sigur vrei să ștergi acest articol?")) return;
-    
+
     setIsLoading(true);
-    axios.delete(REMOVE_POST.replace("{id}", id.toString()))
+    axios
+      .delete(REMOVE_POST.replace("{id}", id.toString()))
       .then(() => {
         fetchPosts();
       })
@@ -105,13 +126,13 @@ const Posts = () => {
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return "Data necunoscută";
-      
+
       const day = date.getDate();
       const month = monthNames[date.getMonth()];
       const year = date.getFullYear();
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+
       return `${day} ${month} ${year}, ${hours}:${minutes}`;
     } catch {
       return "Data necunoscută";
@@ -124,11 +145,19 @@ const Posts = () => {
         <div className="bg-gray-800 p-10 rounded-2xl shadow-2xl border border-gray-700">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-white">Articole și Noutăți</h2>
+            <h2 className="text-2xl font-bold text-white">
+              Articole și Noutăți
+            </h2>
             {isAdmin && (
               <button
                 className="bg-blue-600 hover:bg-blue-700 transition-colors duration-300 text-white font-semibold py-2 px-5 rounded-xl shadow"
-                onClick={() => (document.getElementById('add-post-modal') as HTMLDialogElement)?.showModal()}
+                onClick={() =>
+                  (
+                    document.getElementById(
+                      "add-post-modal",
+                    ) as HTMLDialogElement
+                  )?.showModal()
+                }
               >
                 + Adaugă Articol
               </button>
@@ -145,7 +174,9 @@ const Posts = () => {
           {/* Posts list */}
           <div className="space-y-6">
             {posts.length === 0 && !isLoading ? (
-              <p className="text-gray-400 text-center py-8">Nu există articole disponibile.</p>
+              <p className="text-gray-400 text-center py-8">
+                Nu există articole disponibile.
+              </p>
             ) : (
               posts.map((post) => (
                 <div
@@ -154,18 +185,20 @@ const Posts = () => {
                 >
                   <div className="flex items-start gap-4">
                     {post.imageUrl && (
-                      <img
+                      <Image
                         src={post.imageUrl}
                         alt={post.title}
                         className="w-32 h-32 object-cover rounded-md"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
+                          (e.target as HTMLImageElement).style.display = "none";
                         }}
                       />
                     )}
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-white">{post.title}</h3>
+                        <h3 className="text-lg font-semibold text-white">
+                          {post.title}
+                        </h3>
                         {isAdmin && (
                           <button
                             onClick={() => handleDeletePost(post.id)}
@@ -175,9 +208,7 @@ const Posts = () => {
                           </button>
                         )}
                       </div>
-                      <p className="text-gray-400 mt-2">
-                        {post.content}
-                      </p>
+                      <p className="text-gray-400 mt-2">{post.content}</p>
                       <p className="text-gray-500 text-sm mt-2">
                         {formatDate(post.createdAt)}
                       </p>
@@ -192,27 +223,40 @@ const Posts = () => {
 
       {/* Add Post Modal - Only needed if admin */}
       {isAdmin && (
-        <dialog id="add-post-modal" className="bg-gray-800 rounded-xl border border-gray-700 p-6 w-full max-w-md">
-          <h3 className="text-xl font-bold text-white mb-4">Adaugă Articol Nou</h3>
-          
+        <dialog
+          id="add-post-modal"
+          className="bg-gray-800 rounded-xl border border-gray-700 p-6 w-full max-w-md"
+        >
+          <h3 className="text-xl font-bold text-white mb-4">
+            Adaugă Articol Nou
+          </h3>
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Titlu*</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Titlu*
+              </label>
               <input
                 type="text"
                 value={newPost.title}
-                onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                onChange={(e) =>
+                  setNewPost({ ...newPost, title: e.target.value })
+                }
                 className="w-full bg-gray-700 border border-gray-600 rounded-md text-white p-2"
                 placeholder="Introdu titlul articolului"
                 required
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Conținut*</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Conținut*
+              </label>
               <textarea
                 value={newPost.content}
-                onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                onChange={(e) =>
+                  setNewPost({ ...newPost, content: e.target.value })
+                }
                 className="w-full bg-gray-700 border border-gray-600 rounded-md text-white p-2 min-h-[150px]"
                 placeholder="Introdu conținutul articolului"
                 required
@@ -220,20 +264,28 @@ const Posts = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">URL Imagine (opțional)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                URL Imagine (opțional)
+              </label>
               <input
                 type="text"
                 value={newPost.imageUrl}
-                onChange={(e) => setNewPost({...newPost, imageUrl: e.target.value})}
+                onChange={(e) =>
+                  setNewPost({ ...newPost, imageUrl: e.target.value })
+                }
                 className="w-full bg-gray-700 border border-gray-600 rounded-md text-white p-2"
                 placeholder="Introdu URL-ul imaginii"
               />
             </div>
           </div>
-          
+
           <div className="flex justify-end gap-3 mt-6">
             <button
-              onClick={() => (document.getElementById('add-post-modal') as HTMLDialogElement)?.close()}
+              onClick={() =>
+                (
+                  document.getElementById("add-post-modal") as HTMLDialogElement
+                )?.close()
+              }
               className="px-4 py-2 text-gray-300 hover:text-white"
             >
               Anulează

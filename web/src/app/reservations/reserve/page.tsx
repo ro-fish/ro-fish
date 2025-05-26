@@ -55,58 +55,71 @@ export default function Reservation() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center px-4">
       <div className="w-full max-w-3xl bg-gray-800 p-10 rounded-2xl shadow-2xl border border-gray-700">
-        <h2 className="text-2xl font-semibold text-white mb-8 text-center">Rezervare Pescuit</h2>
-          
-          {/* Număr persoane */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-300 mb-1">Număr persoane</label>
-            <input
-              type="number"
-              value={personCount}
-              onChange={(e) => setPersonCount(Number(e.target.value))}
-              className="w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
-              required
-              placeholder="Ex: 4"
-            />
-          </div>
+        <h2 className="text-2xl font-semibold text-white mb-8 text-center">
+          Rezervare Pescuit
+        </h2>
 
-          {/* Data */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-300 mb-1">Data</label>
-            <input
-              type="date"
-              className="w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
-              required
-              defaultValue={date.toISOString().split("T")[0]}
-              onChange={(e) => {
-                setDate(new Date(e.target.value));
-                setSelection(null);
-              }}
-            />
-          </div>
+        {/* Număr persoane */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Număr persoane
+          </label>
+          <input
+            type="number"
+            value={personCount}
+            onChange={(e) => setPersonCount(Number(e.target.value))}
+            className="w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            required
+            placeholder="Ex: 4"
+          />
+        </div>
 
-          {/* Selectat */}
-          <div className="mb-6">
-            <p className="mt-2 text-text text-gray-300">Selectat: {selection?.name ?? "Nicio locație selectată"}</p>
-          </div>
+        {/* Data */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Data
+          </label>
+          <input
+            type="date"
+            className="w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            required
+            defaultValue={date.toISOString().split("T")[0]}
+            onChange={(e) => {
+              setDate(new Date(e.target.value));
+              setSelection(null);
+            }}
+          />
+        </div>
 
-          {/* Locație */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">Locație</label>
-            <div style={{ height: "600px", width: "100%" }} className="rounded-lg overflow-hidden border border-gray-600 shadow-md">
-              <MapProvider fishingSpots={fishingSpots} onSelect={sel} />
-            </div>
+        {/* Selectat */}
+        <div className="mb-6">
+          <p className="mt-2 text-text text-gray-300">
+            Selectat: {selection?.name ?? "Nicio locație selectată"}
+          </p>
+        </div>
+
+        {/* Locație */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Locație
+          </label>
+          <div
+            style={{ height: "600px", width: "100%" }}
+            className="rounded-lg overflow-hidden border border-gray-600 shadow-md"
+          >
+            <MapProvider fishingSpots={fishingSpots} onSelect={sel} />
           </div>
-          
-          {/* Buton rezervare */}
-          <div style={{ marginTop: "50px" }} className="text-center mt-8">
-            <input
-              type="submit"
-              value="Rezervă"
-              className="bg-blue-500 text-white p-3 rounded-md"
-              onClick={submitReservation}
-            />
-            </div>
+        </div>
+
+        {/* Buton rezervare */}
+        <div style={{ marginTop: "50px" }} className="text-center mt-8">
+          <input
+            type="submit"
+            value="Rezervă"
+            className="bg-blue-500 text-white p-3 rounded-md"
+            onClick={submitReservation}
+          />
+        </div>
       </div>
     </div>
   );

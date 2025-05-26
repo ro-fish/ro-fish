@@ -5,9 +5,10 @@ export const middleware = async (request: NextRequest) => {
   const protectedPaths = ["/dashboard", "/reservations"];
   const { pathname } = request.nextUrl;
 
-
   // Check if the requested path is protected
-  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
+  const isProtectedPath = protectedPaths.some((path) =>
+    pathname.startsWith(path),
+  );
 
   // Allow non-protected paths to pass through
   if (!isProtectedPath) {
@@ -25,7 +26,7 @@ export const middleware = async (request: NextRequest) => {
 
     const response = await axios.get(apiUrl, {
       headers: {
-      Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
