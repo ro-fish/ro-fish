@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `http://192.168.1.140:${process.env.ROFISH_SERVER_PORT || "8080"}/api/:path*`,
+        destination: `http://localhost:${process.env.ROFISH_SERVER_PORT || "8080"}/api/:path*`,
       },
     ];
   },

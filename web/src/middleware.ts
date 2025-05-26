@@ -21,9 +21,11 @@ export const middleware = async (request: NextRequest) => {
   }
 
   try {
-    const response = await axios.get("http://192.168.1.140:8080/api/auth/roles", {
+    const apiUrl = `http://${process.env.ROFISH_SERVER_HOST || "localhost"}:${process.env.ROFISH_SERVER_PORT || "8080"}/api/auth/roles`;
+
+    const response = await axios.get(apiUrl, {
       headers: {
-        Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       },
     });
 
