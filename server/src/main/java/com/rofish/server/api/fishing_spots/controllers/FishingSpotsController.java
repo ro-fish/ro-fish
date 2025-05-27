@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +50,8 @@ public class FishingSpotsController {
             @ApiResponse(responseCode = "200", description = "Free fishing spots retrieved successfully."),
         })
     @GetMapping("/by-date")
-    public ResponseEntity<List<FishingSpotData>> getFreeFishingSpots(@RequestParam LocalDate date) {
+    public ResponseEntity<List<FishingSpotData>> getFreeFishingSpots(
+        @RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date) {
         List<FishingSpotData> spots = new ArrayList<>();
 
         fishingSpotRepository.findAll().forEach(spot -> {

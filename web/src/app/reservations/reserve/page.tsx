@@ -1,17 +1,18 @@
 "use client";
 
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect } from "react";
 import MapProvider from "@/components/map/reservation/map-provider";
 import { FishingSpotDTO } from "@/types/fishing-spot";
-import axios from "axios";
-import { FETCH_FISHING_SPOTS } from "@/lib/api";
-import { useRouter } from "next/navigation";
+import { FETCH_FREE_FISHING_SPOTS } from "@/lib/api";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 export default function Reservation() {
   const [selection, setSelection] = React.useState<FishingSpotDTO | null>(null);
-  const [date, setDate] = React.useState(
-    new Date(Date.now() + 86400000) /*FIXME*/,
-  );
+  const [date, setDate] = React.useState<Dayjs | null>(null);
   const [personCount, setPersonCount] = React.useState(1);
   const [fishingSpots, setFishingSpots] = React.useState<FishingSpotDTO[]>([]);
 
@@ -20,9 +21,17 @@ export default function Reservation() {
   const sel = useCallback((s: FishingSpotDTO) => setSelection(s), []);
 
   const fetchSpots = () => {
-    axios.get<FishingSpotDTO[]>(FETCH_FISHING_SPOTS).then((response) => {
-      setFishingSpots(response.data);
-    });
+    if (date == null || date.isBefore(dayjs(), "day")) {
+      return;
+    }
+
+    axios
+      .get<
+        FishingSpotDTO[]
+      >(FETCH_FREE_FISHING_SPOTS, { params: { date: date.format('YYYY-MM-DD') } })
+      .then((response) => {
+        setFishingSpots(response.data);
+      });
   };
 
   // Fetch spots on page load and on date change
@@ -33,7 +42,7 @@ export default function Reservation() {
       return;
     }
 
-    if (date < new Date()) {
+    if (date == null || date.isBefore(dayjs(), "day")) {
       return;
     }
 
@@ -79,23 +88,16 @@ export default function Reservation() {
           <label className="block text-sm font-medium text-gray-300 mb-1">
             Data
           </label>
-          <input
-            type="date"
-            className="w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
-            required
-            defaultValue={date.toISOString().split("T")[0]}
-            onChange={(e) => {
-              setDate(new Date(e.target.value));
-              setSelection(null);
-            }}
-          />
-        </div>
-
-        {/* Selectat */}
-        <div className="mb-6">
-          <p className="mt-2 text-text text-gray-300">
-            Selectat: {selection?.name ?? "Nicio locație selectată"}
-          </p>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              className="w-full bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+              value={date}
+              onChange={(date) => {
+                setDate(dayjs(date));
+                setSelection(null);
+              }}
+            />
+          </LocalizationProvider>
         </div>
 
         {/* Locație */}

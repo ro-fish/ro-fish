@@ -4,6 +4,7 @@ export const LOGOUT = "/api/auth/logout";
 export const CHECK_AUTH = "/api/auth/roles";
 
 export const FETCH_FISHING_SPOTS = "/api/fishing-spots/all";
+export const FETCH_FREE_FISHING_SPOTS = "/api/fishing-spots/by-date";
 export const CREATE_FISHING_SPOT = "/api/fishing-spots/spot";
 export const DELETE_FISHING_SPOT = "/api/fishing-spots/spot";
 
