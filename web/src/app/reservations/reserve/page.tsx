@@ -28,7 +28,7 @@ export default function Reservation() {
     axios
       .get<
         FishingSpotDTO[]
-      >(FETCH_FREE_FISHING_SPOTS, { params: { date: date.format('YYYY-MM-DD') } })
+      >(FETCH_FREE_FISHING_SPOTS, { params: { date: date.format("YYYY-MM-DD") } })
       .then((response) => {
         setFishingSpots(response.data);
       });

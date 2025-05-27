@@ -35,7 +35,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex gap-6 justify-center">
+          {/* <div className="flex gap-6 justify-center">
             <Link
               href="/login"
               className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors text-lg"
@@ -48,7 +48,7 @@ export default function Home() {
             >
               Înregistrare
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

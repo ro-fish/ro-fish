@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [fullName, setName] = useState("");
 
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("aaa");
+  const [emailError, setEmailError] = useState("");
 
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -36,7 +36,7 @@ export default function RegisterPage() {
           return;
         }
 
-        if (response.data.success) {
+        if (response.status === 200) {
           router.push("/login");
         }
       });
