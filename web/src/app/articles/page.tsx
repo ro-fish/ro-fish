@@ -1,12 +1,10 @@
 "use client";
 
-import { FETCH_POSTS, REMOVE_POST } from "@/lib/api";
+import { FETCH_POSTS } from "@/lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import FishingSpotDTO from "@/types/fishing-spot";
-import { FETCH_FISHING_SPOTS } from "@/lib/api";
 
-const News = () => {
+const Articles = () => {
   const [posts, setPosts] = useState([]);
 
   type PostData = {
@@ -29,20 +27,6 @@ const News = () => {
       setPosts(data);
     });
   };
-  const onRemove = (id: number) => {
-    axios
-      .delete(REMOVE_POST + id)
-      .then(() => {
-        alert("Articolul a fost șters cu succes!");
-        fetchPosts();
-      })
-      .catch((error) => {
-        console.error("Eroare la ștergerea articolului:", error);
-        alert(
-          "A apărut o eroare la ștergerea articolului. Te rugăm să încerci din nou.",
-        );
-      });
-  };
 
   useEffect(() => fetchPosts(), []);
 
@@ -52,15 +36,7 @@ const News = () => {
         <div className="bg-gray-800 p-10 rounded-2xl shadow-2xl border border-gray-700">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-white">
-              Gestioneaza Articole
-            </h2>
-            <button
-              className="bg-blue-600 hover:bg-blue-700 transition-colors duration-300 text-white font-semibold py-2 px-5 rounded-xl shadow"
-              onClick={() => (window.location.href = "./news/post")}
-            >
-              + Creează articol
-            </button>
+            <h2 className="text-2xl font-bold text-white">Articole de Stiri</h2>
           </div>
 
           {/* Lista postari */}
@@ -71,27 +47,11 @@ const News = () => {
                 key={post.id}
               >
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-2xl font-bold text-white">
-                        {post.title}
-                      </h2>
-                      <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full">
-                        ID: {post.id}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => onRemove(post.id)}
-                      className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition"
-                    >
-                      Remove
-                    </button>
-                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    {post.title}
+                  </h2>
                   <div className="text-sm text-gray-300 mb-4">
-                    <span className="text-blue-400 font-semibold">
-                      {post.category}
-                    </span>{" "}
-                    •{" "}
+                    {/* <span className="text-blue-400 font-semibold">{post.category}</span> •{" "} */}
                     {new Date(post.date).toLocaleDateString("ro-RO", {
                       day: "2-digit",
                       month: "long",
@@ -130,4 +90,4 @@ const News = () => {
   );
 };
 
-export default News;
+export default Articles;

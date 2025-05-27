@@ -139,8 +139,8 @@ const MapEditor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-16 px-4">
+      <div className="bg-gray-800 p-10 rounded-2xl shadow-2xl border border-gray-700">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-400 mb-2">
             {" "}

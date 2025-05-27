@@ -12,6 +12,7 @@ const Users = () => {
     email: string;
     fullName: string;
     isAdmin: boolean;
+    isActive: boolean;
   };
   const [users, setUser] = React.useState<UserData[]>([]);
 
@@ -21,7 +22,7 @@ const Users = () => {
     });
   };
 
-  useEffect(() => fetchUsers());
+  useEffect(() => fetchUsers(), []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-16 px-4">
@@ -50,9 +51,9 @@ const Users = () => {
                     </p>
                   </div>
 
-                  <div>
+                  <div className="flex flex-col items-start space-y-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm ${
+                      className={`w-full px-3 py-1 rounded-full text-sm text-center ${
                         user.isAdmin
                           ? "bg-blue-500 text-white"
                           : "bg-gray-500 text-white"
@@ -60,6 +61,60 @@ const Users = () => {
                     >
                       {user.isAdmin ? "Administrator" : "Utilizator"}
                     </span>
+                    {/* <button
+                      onClick={() => {
+                        axios
+                          .put(`/api/users/${user.id}/set-active?active=${!user.isActive}`)
+                          .then(() => {
+                            if (user.isActive) {
+                              alert("Contul utilizatorului nu mai este activ.");
+                            } else {
+                              alert("Contul utilizatorului este activ acum.");
+                            }
+                            fetchUsers();
+                          })
+                          .catch((error) => {
+                            console.error("Eroare la modificarea utilizatorului:", error);
+                            alert("A apărut o eroare la modificarea utilizatorului.");
+                          });
+                      }}
+                      className="px-3 py-1 rounded-full text-sm bg-green-500 text-white"
+                    >
+                      {user.isActive ? "Dezactiveaza cont" : "Activeaza cont"}
+                    </button> */}
+
+                    <button
+                      onClick={() => {
+                        axios
+                          .put(
+                            `/api/users/${user.id}/set-admin?admin=${!user.isAdmin}`,
+                          )
+                          .then(() => {
+                            if (user.isAdmin) {
+                              alert("Utilizatorul nu mai este administrator.");
+                            } else {
+                              alert(
+                                "Utilizatorul a fost făcut administrator cu succes!",
+                              );
+                            }
+                            fetchUsers();
+                          })
+                          .catch((error) => {
+                            console.error(
+                              "Eroare la modificarea utilizatorului:",
+                              error,
+                            );
+                            alert(
+                              "A apărut o eroare la modificarea utilizatorului.",
+                            );
+                          });
+                      }}
+                      className="w-full px-3 py-1 rounded-full text-sm bg-green-500 text-white"
+                    >
+                      {user.isAdmin
+                        ? "Scoate din administratori"
+                        : "Adaugă la administratori"}
+                    </button>
                   </div>
                 </div>
               </div>

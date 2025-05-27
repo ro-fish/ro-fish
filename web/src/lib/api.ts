@@ -13,4 +13,4 @@ export const FETCH_RESERVATIONS = "/api/reservations/my-reservations";
 export const FETCH_POSTS = "/api/posts/all";
 export const FETCH_USERS = "/api/users/all";
 export const ADD_POST = "/api/posts/add";
-export const REMOVE_POST = "/api/posts/remove/{id}";
+export const REMOVE_POST = "/api/posts/remove/";
